@@ -1,3 +1,5 @@
+// Información del proyecto y las emociones
+
 const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
 const EMOTIONS = [
@@ -9,26 +11,27 @@ const EMOTIONS = [
 
 function emotionCard({ key, name, desc }) {
   return `
-    <div class="card ${key}" data-link href="/chat" data-emotion="${key}" tabindex="0" role="button">
-      <img src="./assets/img/${key}.png" alt="${name}" />
+    <a class="card ${key}" href="/chat/${key}">
+      <img src="/assets/img/${key}.png" alt="${name}" />
       <div class="card__info">
         <h3>${name}</h3>
         <p>${desc}</p>
       </div>
-    </div>
+    </a>
   `;
 }
 
 export function renderAbout() {
+  const app = document.getElementById("app");
   const cards = EMOTIONS.map(emotionCard).join("");
 
-  return `
+  app.innerHTML = `
     <div id="About">
       <nav class="about-nav">
         <p class="about-nav__brand">INTENSAMENTE</p>
-        <button class="btn-about-close" type="button" data-link href="/home" aria-label="Volver a home">
+        <a class="btn-about-close" href="/home" aria-label="Volver a home">
           ${ICON_CLOSE}
-        </button>
+        </a>
       </nav>
 
       <div class="container-header">
