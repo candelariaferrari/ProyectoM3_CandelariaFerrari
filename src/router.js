@@ -4,7 +4,7 @@ import { renderAbout } from "./views/about.js";
 import { renderNotFound } from "./views/notFound.js";
 
 // Cada view es responsable de insertarse a sí misma en el DOM (ver views/*.js).
-// El router solo decide CUÁL renderizar según la URL actual.
+
 const routes = [
   { pattern: /^\/(?:home)?$/, render: renderHome },
   { pattern: /^\/chat\/(\w+)$/, render: renderChat }, // /chat/joy, /chat/anger, ...
@@ -12,8 +12,14 @@ const routes = [
   { pattern: /^\/about$/, render: renderAbout },
 ];
 
+// para Live Server (y algunos hosts estáticos) 
+function normalizePath(pathname) {
+  const cleaned = pathname.replace(/\/index\.html$/, "/");
+  return cleaned === "" ? "/" : cleaned;
+}
+
 export function router() {
-  const path = window.location.pathname;
+  const path = normalizePath(window.location.pathname);
 
   for (const route of routes) {
     const match = path.match(route.pattern);
