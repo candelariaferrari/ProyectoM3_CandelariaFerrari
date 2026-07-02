@@ -8,7 +8,7 @@ const EMOTIONS = [
 function cardTemplate({ key, name, desc }) {
   return `
       <div class="card ${key}" data-link href="/chat" data-emotion="${key}" tabindex="0" role="button">
-        <img src="../../assets/img/${key}.png" alt="${name}" />
+        <img src="./assets/img/${key}.png" alt="${name}" />
         <div class="card__info">
           <h3>${name}</h3>
           <p>${desc}</p>

@@ -1,4 +1,11 @@
+/* =============================================================
+   INTENSAMENTE — Chat con tus Emociones
+   styles.css — v2: variables completas (sin hex hardcodeado),
+   imágenes responsive, gap/tipografía/footer/botón escalando
+   por breakpoint.
+   ============================================================= */
 
+/* ── RESET ── */
 *,
 *::before,
 *::after {
@@ -21,7 +28,11 @@ img {
   display: block;
 }
 
+/* =============================================================
+   BLOQUE 1 — CSS CUSTOM PROPERTIES
+   ============================================================= */
 :root {
+  /* ── Base / neutro ── */
   --bg-primary: #0d1b2e;
   --bg-secondary: #16213e;
   --surface-neutral: #0f3460;
@@ -31,6 +42,48 @@ img {
   --text-secondary: #9aa5c1;
   --accent-neutral: #6c63ff;
   --accent-neutral-2: #b25bc7;
+
+  /* ── Neutros absolutos (reemplazan hex sueltos en clases) ── */
+  --white: #ffffff;
+  --black-soft: #1a1a1a;
+  --gray-dark: #555555;
+  --gray-medium: #8a8a8a;
+
+  /* ── Acento dorado (CTA secundarios / estados activos) ── */
+  --gold: #ffd54f;
+  --gold-dark: #ffa000;
+
+  /* ── Estados de presencia (status-dot) ── */
+  --status-online: #4caf50;
+  --status-offline: #9e9e9e;
+  --status-error: #e53935;
+
+  /* ── Overlays claros (sobre fondos de color / vidrio) ── */
+  --overlay-white-10: rgba(255, 255, 255, 0.1);
+  --overlay-white-12: rgba(255, 255, 255, 0.12);
+  --overlay-white-15: rgba(255, 255, 255, 0.15);
+  --overlay-white-28: rgba(255, 255, 255, 0.28);
+  --overlay-white-32: rgba(255, 255, 255, 0.32);
+  --overlay-white-35: rgba(255, 255, 255, 0.35);
+  --overlay-white-50: rgba(255, 255, 255, 0.5);
+  --overlay-white-92: rgba(255, 255, 255, 0.92);
+
+  /* ── Overlays oscuros (paneles translúcidos sobre color de emoción) ── */
+  --overlay-dark-16: rgba(0, 0, 0, 0.16);
+  --overlay-dark-18: rgba(0, 0, 0, 0.18);
+  --overlay-dark-20: rgba(0, 0, 0, 0.2);
+  --overlay-dark-25: rgba(0, 0, 0, 0.25);
+  --overlay-dark-40: rgba(0, 0, 0, 0.4);
+  --overlay-navy-50: rgba(10, 30, 58, 0.5);
+
+  /* ── Glows de foco / hover (accent morado) ── */
+  --glow-accent-25: rgba(108, 99, 255, 0.25);
+  --glow-accent-35: rgba(108, 99, 255, 0.35);
+  --glow-accent-40: rgba(108, 99, 255, 0.4);
+
+  /* ── Glow dorado (card activa / botón retry) ── */
+  --glow-gold-strong: rgba(255, 213, 79, 0.53);
+  --glow-gold-soft: rgba(255, 213, 79, 0.2);
 
   /* ── Tipografía ── */
   --font-display: "Nunito", sans-serif;
@@ -43,19 +96,20 @@ img {
   --space-lg: 1.5rem;
   --space-xl: 2rem;
 
-  /* ── Font sizes (compactos, mobile-first) ── */
-  --f-badge: 0.7rem; 
+  /* ── Font sizes (mobile-first, todo en rem) ── */
+  --f-badge: 0.6875rem;
   --f-title: 1.5rem;
   --f-subtitle: 0.9rem;
-  --f-name: 1rem; 
-  --f-desc: 0.9rem;
-  --f-small: 1rem;
-  --f-medium: 1.2rem;
+  --f-name: 1rem;
+  --f-desc: 0.85rem;
+  --f-small: 0.8rem;
+  --f-medium: 0.9rem;
 
-  /* ── Cards ── */
+  /* ── Cards / grid (crecen por breakpoint) ── */
   --card-radius: 16px;
-  --card-aspect: 5/7; 
-  --grid-gap: 2rem;
+  --card-aspect: 5 / 7;
+  --grid-gap: 1rem;
+  --content-max-width: 480px; /* ancho compartido entre cards, footer y btn-chat */
 
   /* ── Transiciones ── */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -136,6 +190,7 @@ img {
   --glow: rgba(255, 138, 101, 0.4);
 }
 
+/* ── Base body ── */
 body {
   min-height: 100vh;
   min-height: 100dvh;
@@ -143,8 +198,16 @@ body {
   flex-direction: column;
   font-family: var(--font-body), sans-serif;
   color: var(--text-primary-neutral);
-  background: radial-gradient(circle at 12% -10%, rgba(108, 99, 255, 0.28), transparent 45%),
-    radial-gradient(circle at 88% 108%, rgba(255, 109, 0, 0.14), transparent 50%),
+  background: radial-gradient(
+      circle at 12% -10%,
+      rgba(108, 99, 255, 0.28),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 88% 108%,
+      rgba(255, 109, 0, 0.14),
+      transparent 50%
+    ),
     linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   position: relative;
   overflow-x: hidden;
@@ -188,12 +251,14 @@ body::after {
   width: 100%;
 }
 
-/* Home */
+/* =============================================================
+   BLOQUE 2 — HOME
+   ============================================================= */
 #home {
   width: 100%;
-  max-width: 480px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: var(--space-lg) var(--space-xl) var(--space-xl);
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -216,12 +281,28 @@ body::after {
   line-height: 1.25;
   font-size: var(--f-title);
   margin: var(--space-sm) auto var(--space-xs);
+  transition: font-size var(--transition-medium);
 }
 
+/* .header__title span {
+  background: linear-gradient(
+    90deg,
+    var(--accent-neutral),
+    var(--accent-neutral-2)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+} */
+
 .header__subtitle {
-  font-size: var(--f-small);
+  font-size: var(--f-subtitle);
   font-weight: 600;
-  background: linear-gradient(90deg, var(--accent-neutral), var(--accent-neutral-2));
+  background: linear-gradient(
+    90deg,
+    var(--accent-neutral),
+    var(--accent-neutral-2)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -235,7 +316,9 @@ body::after {
   width: 100%;
   margin: var(--space-lg) auto;
   justify-content: center;
+  transition: gap var(--transition-medium);
 }
+
 .card {
   position: relative;
   aspect-ratio: var(--card-aspect);
@@ -244,8 +327,8 @@ body::after {
   cursor: pointer;
   border: 1px solid transparent;
   display: block;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
-    border-color var(--transition-fast);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .card:hover,
@@ -260,19 +343,23 @@ body::after {
 }
 
 .card.active {
-  outline: 3px solid #ffd54f;
-  box-shadow: 0 0 20px #ffd54f88, 0 0 40px #ffd54f33;
+  outline: 3px solid var(--gold);
+  box-shadow: 0 0 20px var(--glow-gold-strong), 0 0 40px var(--glow-gold-soft);
 }
 
 .card img {
   position: absolute;
-  object-position: top;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: none;
+  object-fit: cover;
+  object-position: top;
   z-index: 0;
+  transition: transform var(--transition-medium);
+}
 
+.card:hover img {
+  transform: scale(1.04);
 }
 
 .card.joy,
@@ -289,22 +376,23 @@ body::after {
   right: 0;
   bottom: 0;
   z-index: 1;
+  min-height: 5.25rem;
   padding: var(--space-sm) var(--space-sm) var(--space-md);
-  background: rgba(10, 30, 58, 0.5);
+  background: var(--overlay-navy-50);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--text-primary-neutral);
+  color: var(--white);
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-height: 5.25rem;
   justify-content: center;
+  gap: 4px;
 }
 
 .card__info h3 {
   font-family: var(--font-display), sans-serif;
   font-weight: 800;
   font-size: var(--f-name);
+  color: var(--white);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -312,42 +400,57 @@ body::after {
 
 .card__info p {
   font-size: var(--f-desc);
-  color: #ffffff;
-  line-clamp: 2 ;
+  color: var(--white);
+  opacity: 0.85;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-/*   text-overflow: ellipsis; */
 }
 
 /* Botón principal */
 .btn-chat {
   margin-top: var(--space-lg);
   width: 100%;
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
   min-height: 48px;
   border: none;
   border-radius: 18px;
   padding: 0.9rem;
-  background: linear-gradient(90deg, var(--accent-neutral), var(--accent-neutral-2));
-  color: #ffffff;
+  background: linear-gradient(
+    90deg,
+    var(--accent-neutral),
+    var(--accent-neutral-2)
+  );
+  color: var(--white);
   font-family: var(--font-display), sans-serif;
   font-size: 1.1rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(108, 99, 255, 0.25);
+  box-shadow: 0 4px 14px var(--glow-accent-25);
   transition: transform var(--transition-fast), filter var(--transition-fast),
-    box-shadow var(--transition-fast);
+    box-shadow var(--transition-fast), font-size var(--transition-medium),
+    max-width var(--transition-medium);
 }
 
 .btn-chat:hover {
   filter: brightness(1.12);
   transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 10px 26px rgba(108, 99, 255, 0.4);
+  box-shadow: 0 10px 26px var(--glow-accent-40);
 }
 
 .btn-chat:active {
   transform: translateY(-1px) scale(0.99);
-  box-shadow: 0 4px 14px rgba(108, 99, 255, 0.25);
+  box-shadow: 0 4px 14px var(--glow-accent-25);
 }
-/* CHATS */
+
+/* =============================================================
+   BLOQUE 3 — CHATS
+   ============================================================= */
 #chatbox {
   min-height: 100vh;
   min-height: 100dvh;
@@ -358,7 +461,6 @@ body::after {
   color: var(--text-primary);
 }
 
-/* Topbar con selector rápido de emociones — visible solo en desktop */
 .chatbox__topbar {
   display: none;
 }
@@ -383,22 +485,23 @@ body::after {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid var(--overlay-white-50);
   cursor: pointer;
   transition: transform var(--transition-fast);
 }
 
+/* Reutiliza las variables temáticas ya definidas por .joy/.anger/.sadness/.anxiety */
 .emotion-dot.joy {
-  background: #ffd740;
+  background: var(--bg-top);
 }
 .emotion-dot.anger {
-  background: #c62828;
+  background: var(--bg-top);
 }
 .emotion-dot.sadness {
-  background: #1a3a6b;
+  background: var(--bg-top);
 }
 .emotion-dot.anxiety {
-  background: #ff6d00;
+  background: var(--bg-top);
 }
 
 .emotion-dot:hover {
@@ -412,14 +515,13 @@ body::after {
   min-height: 0;
 }
 
-/* Sidebar del personaje — oculto en mobile/tablet, visible en desktop */
 .chat-sidebar {
   display: none;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: var(--space-xl) var(--space-lg);
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--overlay-dark-18);
 }
 
 .btn-back {
@@ -428,7 +530,7 @@ body::after {
   height: 32px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--overlay-white-15);
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -439,7 +541,7 @@ body::after {
 }
 
 .btn-back:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--overlay-white-28);
 }
 
 .chat-sidebar__avatar {
@@ -447,7 +549,7 @@ body::after {
   height: 96px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  border: 3px solid var(--overlay-white-35);
   margin-bottom: var(--space-md);
 }
 
@@ -463,12 +565,12 @@ body::after {
   color: var(--text-secondary);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--overlay-white-15);
   width: 100%;
 }
 
 .chat-sidebar__label {
-  font-size: 0.8rem;
+  font-size: var(--f-small);
   font-weight: 700;
   margin-bottom: var(--space-sm);
   align-self: flex-start;
@@ -484,7 +586,6 @@ body::after {
   align-self: flex-start;
 }
 
-/* Área principal del chat */
 .chat-main {
   display: flex;
   flex-direction: column;
@@ -497,7 +598,7 @@ body::after {
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-md);
-  background: rgba(0, 0, 0, 0.20);
+  background: var(--overlay-dark-20);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
@@ -507,12 +608,13 @@ body::after {
 }
 
 .chat-header__avatar {
-  width: 44px;
-  height: 44px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid var(--overlay-white-35);
   flex-shrink: 0;
+  background: var(--overlay-white-32);
 }
 
 .chat-header__info {
@@ -523,7 +625,7 @@ body::after {
 .chat-header__name {
   font-family: var(--font-display), sans-serif;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: var(--f-medium);
   color: var(--name-color);
   white-space: nowrap;
   overflow: hidden;
@@ -531,7 +633,7 @@ body::after {
 }
 
 .chat-header__status {
-  font-size: 0.75rem;
+  font-size: var(--f-small);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -540,22 +642,22 @@ body::after {
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: #4caf50;
-  box-shadow: 0 0 8px #4caf50;
+  background: var(--status-online);
+  box-shadow: 0 0 8px var(--status-online);
   flex-shrink: 0;
 }
 
 .status-dot.offline {
-  background: #9e9e9e;
-  box-shadow: 0 0 8px #9e9e9e;
+  background: var(--status-offline);
+  box-shadow: 0 0 8px var(--status-offline);
 }
 
 .status-dot.error {
-  background: #e53935;
-  box-shadow: 0 0 8px #e53935;
+  background: var(--status-error);
+  box-shadow: 0 0 8px var(--status-error);
 }
 
 .btn-close {
@@ -564,22 +666,22 @@ body::after {
   min-height: 36px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--overlay-white-15);
   color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  transition: background var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .btn-close:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--overlay-white-28);
   transform: scale(1.05);
 }
 
-/* Mensajes */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -637,13 +739,12 @@ body::after {
   animation-delay: 0.3s;
 }
 
-/* Composer */
 .chat-composer {
   display: flex;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom));
-  background: rgba(0, 0, 0, 0.16);
+  padding: var(--space-lg) var(--space-md);
+  padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom));
+  background: var(--overlay-dark-20);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -656,14 +757,14 @@ body::after {
   padding: 0.7rem 1rem;
   font-family: var(--font-body), sans-serif;
   font-size: var(--f-medium);
-  background: rgba(255, 255, 255, 0.92);
-  color: #1a1a1a;
+  background: var(--overlay-white-92);
+  color: var(--black-soft);
   outline: none;
   transition: box-shadow var(--transition-fast);
 }
 
 .chat-composer input::placeholder {
-  color: #8a8a8a;
+  color: var(--gray-medium);
 }
 
 .chat-composer input:focus-visible {
@@ -701,10 +802,12 @@ body::after {
   transform: none;
 }
 
-/*  ABOUT */
+/* =============================================================
+   BLOQUE 4 — ABOUT
+   ============================================================= */
 #About {
   width: 100%;
-  max-width: 480px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
   padding: var(--space-lg) var(--space-md) var(--space-xl);
   display: flex;
@@ -744,7 +847,7 @@ body::after {
 }
 
 .btn-about-close:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--overlay-white-15);
 }
 
 .about-card {
@@ -794,10 +897,10 @@ body::after {
 
 .tech-list li {
   background: var(--badge-bg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--overlay-white-12);
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: var(--f-small);
   color: var(--text-primary-neutral);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -811,12 +914,14 @@ body::after {
   font-size: 0.95rem;
   color: var(--accent-neutral);
   padding: var(--space-lg) var(--space-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--overlay-white-10);
+  border-bottom: 1px solid var(--overlay-white-10);
   margin: var(--space-xl) 0;
 }
 
-/* BADGE */
+/* =============================================================
+   BLOQUE 5 — BADGE
+   ============================================================= */
 .header__movie {
   display: inline-block;
   padding: 0.35rem 0.9rem;
@@ -824,7 +929,7 @@ body::after {
   background: var(--badge-bg);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--overlay-white-12);
   font-family: var(--font-display), sans-serif;
   font-size: var(--f-badge);
   letter-spacing: 0.2rem;
@@ -833,15 +938,22 @@ body::after {
   margin-bottom: var(--space-md);
 }
 
-/*  FOOTER*/
+/* =============================================================
+   BLOQUE 6 — FOOTER
+   ============================================================= */
 .footer {
   margin-top: auto;
   padding-top: var(--space-xl);
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: var(--f-small);
   color: var(--text-secondary);
+  transition: max-width var(--transition-medium);
 }
 
 .footer a {
@@ -856,7 +968,7 @@ body::after {
   padding: 0.5rem 1rem;
   min-height: 40px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: var(--f-small);
   font-weight: 600;
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast),
@@ -865,9 +977,9 @@ body::after {
 
 .btn-about:hover {
   background: var(--accent-neutral);
-  color: #ffffff;
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(108, 99, 255, 0.35);
+  box-shadow: 0 6px 16px var(--glow-accent-35);
 }
 
 .btn-about:active {
@@ -875,7 +987,9 @@ body::after {
   box-shadow: none;
 }
 
-/* LOADING */
+/* =============================================================
+   BLOQUE 7 — LOADING
+   ============================================================= */
 .loading {
   display: flex;
   flex-direction: column;
@@ -889,7 +1003,7 @@ body::after {
   width: var(--spinner-size);
   height: var(--spinner-size);
   border-radius: 50%;
-  border: var(--spinner-border) solid rgba(255, 255, 255, 0.15);
+  border: var(--spinner-border) solid var(--overlay-white-15);
   border-top-color: var(--accent-neutral);
   animation: spin 0.9s var(--ease) infinite;
 }
@@ -900,7 +1014,9 @@ body::after {
   animation: pulse-text 1.6s ease-in-out infinite;
 }
 
-/* ERROR */
+/* =============================================================
+   BLOQUE 8 — ERROR
+   ============================================================= */
 .error {
   display: flex;
   justify-content: center;
@@ -908,14 +1024,14 @@ body::after {
 }
 
 .error-card {
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--white);
+  color: var(--black-soft);
   border-radius: 16px;
   padding: var(--space-lg);
   max-width: 320px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 30px var(--overlay-dark-25);
   border-top: 4px solid var(--error-server);
 }
 
@@ -939,7 +1055,7 @@ body::after {
 
 .error-card p {
   font-size: 0.85rem;
-  color: #555555;
+  color: var(--gray-dark);
   margin-bottom: var(--space-md);
 }
 
@@ -948,8 +1064,8 @@ body::after {
   padding: 0 1.2rem;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(90deg, #ffd54f, #ffa000);
-  color: #1a1a1a;
+  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  color: var(--black-soft);
   font-weight: 700;
   cursor: pointer;
   transition: transform var(--transition-fast), filter var(--transition-fast);
@@ -964,24 +1080,25 @@ body::after {
   transform: translateY(0);
 }
 
-/*  MEDIA QUERY TABLET (≥768px) */
+/* =============================================================
+   BLOQUE 9 — MEDIA QUERY TABLET (≥768px)
+   ============================================================= */
 @media (min-width: 768px) {
   :root {
-    --f-title: 1.6rem;
-    --f-badge: 0.8rem;
-    --card-img-height: 120px;
+    --f-title: 1.75rem;
+    --f-badge: 0.75rem;
+    --grid-gap: 1.5rem;
+    --content-max-width: 620px;
   }
 
   #home,
   #About {
-    max-width: 620px;
     padding: var(--space-xl) var(--space-lg);
   }
 
   .container-cards,
   .container-cards--about {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 460px;
   }
 
   .chat-header {
@@ -993,34 +1110,36 @@ body::after {
   }
 }
 
-/*  MEDIA QUERY DESKTOP (≥1024px)*/
+/* =============================================================
+   BLOQUE 10 — MEDIA QUERY DESKTOP (≥1024px)
+   ============================================================= */
 @media (min-width: 1024px) {
   :root {
-    --f-title: 2rem; 
-    --f-badge: 0.9rem; 
-    --card-img-height: 150px;
+    --f-title: 2.25rem;
+    --f-badge: 0.8125rem;
+    --grid-gap: 2rem;
+    --content-max-width: 920px;
   }
 
   #home,
   #About {
-    max-width: 1000px;
     padding: var(--space-xl) var(--space-xl);
+    /* Cards centradas horizontal (heredado) y verticalmente en la pantalla */
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .container-cards,
   .container-cards--about {
     grid-template-columns: repeat(4, 1fr);
-    max-width: 920px;
-    gap: var(--space-md);
   }
 
   .btn-chat {
-    max-width: 360px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 1.3rem;
+    padding: 1.1rem;
   }
 
-  /* Chatbox: layout de dos columnas con topbar de selección rápida */
   #chatbox {
     max-width: 1200px;
     width: 92%;
@@ -1029,7 +1148,7 @@ body::after {
     height: 90vh;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 30px 80px var(--overlay-dark-40);
   }
 
   .chatbox__topbar {
@@ -1037,7 +1156,7 @@ body::after {
     align-items: center;
     justify-content: space-between;
     padding: var(--space-md) var(--space-xl);
-    background: rgba(0, 0, 0, 0.16);
+    background: var(--overlay-dark-16);
   }
 
   .chatbox__body {
@@ -1067,13 +1186,14 @@ body::after {
 
 /* Contenedor centrado para pantallas grandes */
 @media (min-width: 1440px) {
-  #home,
-  #About {
-    max-width: 1280px;
+  :root {
+    --content-max-width: 1280px;
   }
 }
 
-/* ANIMACIONES / EFECTOS */
+/* =============================================================
+   BLOQUE 11 — ANIMACIONES / EFECTOS
+   ============================================================= */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1128,7 +1248,7 @@ body::after {
 .container-header,
 .container-cards,
 .btn-chat {
-  animation: fade-in-up 0.6s var(--ease) both;
+  animation: fade-in-up 0.6s var(--ease) backwards;
 }
 
 .container-cards {

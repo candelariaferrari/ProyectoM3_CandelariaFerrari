@@ -91,7 +91,7 @@ export function renderChatbox(params = {}) {
               <button class="btn-back chat-header__back" type="button" data-link href="/home" aria-label="Volver a home">
                 ${ICON_BACK}
               </button>
-              <img class="chat-header__avatar" src="./assets/img/${key}.png" alt="${
+              <img class="chat-header__avatar" src="/assets/img/${key}.png" alt="${
     data.name
   }" />
               <div class="chat-header__info">

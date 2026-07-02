@@ -1,0 +1,151 @@
+/* =============================================================
+   lo exclusivo de la vista About.
+   El header/badge, el sistema de cards (.container-cards--about
+   reusa .card de shared.css) y el footer viven en shared.css.
+   ============================================================= */
+
+#About {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.about-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.about-nav__brand {
+  font-size: var(--f-badge);
+  letter-spacing: 0.2rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.btn-about-close {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--badge-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: var(--text-primary-neutral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-about-close:hover {
+  background: var(--overlay-white-15);
+}
+
+.about-card {
+  background: var(--card-info-bg);
+  border-radius: 16px;
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.about-card h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+
+.about-card p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.about-card p:last-child {
+  margin-bottom: 0;
+}
+
+.about-section {
+  margin: var(--space-xl) 0;
+}
+
+.about-section h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  margin-bottom: var(--space-md);
+}
+
+/* Grid de 2 columnas para la galería de emociones dentro de About
+     (en desktop hereda las 4 columnas definidas en shared.css) */
+.container-cards--about {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tech-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.tech-list li {
+  background: var(--badge-bg);
+  border: 1px solid var(--overlay-white-12);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: var(--f-small);
+  color: var(--text-primary-neutral);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.about-quote {
+  text-align: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--accent-neutral);
+  padding: var(--space-lg) var(--space-md);
+  border-top: 1px solid var(--overlay-white-10);
+  border-bottom: 1px solid var(--overlay-white-10);
+  margin: var(--space-xl) 0;
+}
+
+/* =============================================================
+     MEDIA QUERIES — About
+     ============================================================= */
+@media (min-width: 768px) {
+  #About {
+    padding: var(--space-xl) var(--space-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  #About {
+    padding: var(--space-xl) var(--space-xl);
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .container-cards--about {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .about-card {
+    padding: var(--space-xl);
+  }
+
+  .about-quote {
+    font-size: 1.1rem;
+  }
+}

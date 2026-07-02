@@ -55,6 +55,7 @@ window.addEventListener("popstate", (event) => {
 });
 
 // Render inicial 
-const initialPath =
-  window.location.pathname === "/" ? "/home" : window.location.pathname;
+
+const initialPath = window.location.pathname === '/' ? '/home' : window.location.pathname;
+history.replaceState({ path: initialPath }, '', initialPath); // sincroniza la URL visible
 render(initialPath);
