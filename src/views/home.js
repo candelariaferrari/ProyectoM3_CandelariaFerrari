@@ -1,10 +1,10 @@
 // Vista de bienvenida: galería de emociones
 
 const EMOTIONS = [
-  { key: "joy", name: "Alegría", desc: "Siempre ve el lado bueno" },
-  { key: "anger", name: "Furia", desc: "Directo y sin filtro" },
-  { key: "anxiety", name: "Ansiedad", desc: "Siempre alerta, siempre lista" },
-  { key: "sadness", name: "Tristeza", desc: "Empatía ante todo" },
+  { key: "joy", name: "Alegría", desc: "Siempre encuentro un motivo para sonreír." },
+  { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
+  { key: "anxiety", name: "Ansiedad", desc: "Siempre imagino todos los escenarios posibles." },
+  { key: "sadness", name: "Tristeza", desc: "No hace falta estar bien todo el tiempo." },
 ];
 
 

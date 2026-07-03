@@ -14,37 +14,37 @@
   color: var(--text-primary);
 }
 
-/* Topbar con selector rápido de emociones — visible solo en desktop */
 .chatbox__topbar {
   display: none;
+
 }
 
 .chatbox__title {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: var(--f-xlarge);
   color: var(--text-primary-neutral);
 }
 
-.chatbox__title span {
-  color: var(--accent-neutral);
-}
 
 .chatbox__dots {
   display: flex;
   gap: var(--space-sm);
+  margin-left: 1rem;
 }
 
 .emotion-dot {
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid var(--overlay-white-50);
   cursor: pointer;
-  transition: transform var(--transition-fast);
+  display: block;
+  overflow: hidden;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* Reutiliza las variables temáticas ya definidas por .joy/.anger/.sadness/.anxiety en base.css */
+/* Color de fondo por si la imagen tarda en cargar o falla */
 .emotion-dot.joy,
 .emotion-dot.anger,
 .emotion-dot.sadness,
@@ -52,8 +52,18 @@
   background: var(--bg-top);
 }
 
+.emotion-dot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .emotion-dot:hover {
   transform: scale(1.15);
+}
+
+.emotion-dot.is-active {
+  border-color: var(--white);
 }
 
 .chatbox__body {
@@ -63,78 +73,70 @@
   min-height: 0;
 }
 
-/* Sidebar del personaje — oculto en mobile/tablet, visible en desktop */
 .chat-sidebar {
   display: none;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: var(--space-xl) var(--space-lg);
-  background: var(--overlay-dark-18);
-}
-
-.btn-back {
-  align-self: flex-start;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: var(--overlay-white-15);
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-bottom: var(--space-md);
-  transition: background var(--transition-fast);
-}
-
-.btn-back:hover {
-  background: var(--overlay-white-28);
 }
 
 .chat-sidebar__avatar {
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--overlay-white-35);
   margin-bottom: var(--space-md);
+  background: var(--overlay-white-32);
 }
 
 .chat-sidebar__name {
   font-family: var(--font-display), sans-serif;
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   margin-bottom: var(--space-sm);
+  color: var(--name-color);
 }
 
 .chat-sidebar__tagline {
-  font-size: 0.85rem;
+  font-size: var(--f-medium);
   color: var(--text-secondary);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--overlay-white-15);
+  border-bottom: 1px solid var(--overlay-white-50);
   width: 100%;
 }
 
 .chat-sidebar__label {
-  font-size: var(--f-small);
+  font-size: var(--f-large);
   font-weight: 700;
+  padding-top: var(--space-sm);
   margin-bottom: var(--space-sm);
   align-self: flex-start;
 }
 
 .chat-sidebar__list {
+  width: 100%;
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 0.85rem;
+  font-size: var(--f-medium);
   color: var(--text-secondary);
   align-self: flex-start;
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--overlay-white-50);
 }
-
+.chat-sidebar__phrase{
+  background-color: var(--overlay-white-35);
+  padding: var(--space-md);
+  border-radius: 16px;
+  color: var(--name-color);
+  margin: auto;
+}
 /* Área principal del chat */
 .chat-main {
   display: flex;
@@ -286,6 +288,7 @@
 .message--typing span:nth-child(2) {
   animation-delay: 0.15s;
 }
+
 .message--typing span:nth-child(3) {
   animation-delay: 0.3s;
 }
@@ -297,6 +300,7 @@
   padding: var(--space-lg) var(--space-md);
   padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom));
   background: var(--overlay-dark-20);
+  border-radius: 30px 30px 0px 0px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -369,37 +373,65 @@
 
 @media (min-width: 1024px) {
   #chatbox {
-    max-width: 1200px;
-    width: 92%;
-    margin: 5vh auto;
+    max-width: 1230px;
+    width: 90%;
+    margin: 0.5rem auto 2rem;
     min-height: auto;
     height: 90vh;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 30px 80px var(--overlay-dark-40);
+    background: transparent;
+    box-shadow: none; 
   }
 
   .chatbox__topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-md) var(--space-xl);
-    background: var(--overlay-dark-16);
+    padding: var(--space-md) var(--space-xl) var(--space-xs);
+    background: transparent;
+    width: 90%;
+    margin: 1rem auto 0rem;
+  }
+
+  .content__dots {
+    display: flex;
+    align-items: center;
   }
 
   .chatbox__body {
     flex-direction: row;
     flex: 1;
     min-height: 0;
+    gap: 2rem;
   }
 
   .chat-sidebar {
     display: flex;
     width: 300px;
     flex-shrink: 0;
+    border-radius: 26px;
+    background: linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+    overflow: hidden;
   }
 
   .chat-header {
-    border-radius: 0;
+    border-radius: 26px 26px 0px 0px;
+    padding:var(--space-md) var(--space-lg);
+    backdrop-filter: blur(0px);
+  }
+
+  .chat-main {
+    background: linear-gradient(-180deg, var(--bg-top), var(--bg-bottom));
+    border-radius: 26px;
+    overflow: hidden;
+  }
+  .chat-composer{
+    border-radius: 30px 30px 26px 26px;
+    backdrop-filter: blur(0px);
+  }
+  .chat-header__avatar{
+    width: 55px;
+    height: 55px;
   }
 }

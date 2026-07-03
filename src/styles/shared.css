@@ -98,8 +98,8 @@
   }
 
   .card.active {
-    outline: 3px solid var(--gold);
-    box-shadow: 0 0 20px var(--glow-gold-strong), 0 0 40px var(--glow-gold-soft);
+    outline: 2px solid var(--accent);
+    box-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow);
   }
 
 

@@ -4,32 +4,59 @@
 export const EMOTIONS = {
   joy: {
     name: "Alegría",
-    status: "En línea, lista para ayudarte",
-    tagline: "Siempre veo el lado positivo de las cosas.",
-    helps: ["Motivación", "Ver lo positivo", "Ánimo", "Ideas y energía"],
-    greeting: "¡Hola! ¿En qué te puedo ayudar hoy? ✨",
+    status: "En línea · lista para alegrarte el día",
+    tagline: "Siempre encuentro un motivo para sonreír.",
+    helps: [
+      "Encontrar lo positivo",
+      "Recuperar el ánimo",
+      "Celebrar tus logros",
+      "Motivarte"
+    ],
+    greeting: "¡Hola! ✨ Me alegra muchísimo verte. ¿Qué hacemos hoy?",
+    phrase: "Hasta los días grises esconden un rayito de sol. ☀️"
   },
+
   anger: {
     name: "Furia",
-    status: "En línea · directa y sin vueltas",
-    tagline: "Digo las cosas como son, sin filtro.",
-    helps: ["Poner límites", "Decir lo que pensás", "Encarar un conflicto", "No quedarte callado/a"],
-    greeting: "¿Qué querés? Soy todo oídos. 🔥",
+    status: "En línea · sin vueltas",
+    tagline: "A veces hace falta hacerse escuchar.",
+    helps: [
+      "Poner límites",
+      "Expresar lo que sentís",
+      "Resolver conflictos",
+      "Defender tu postura"
+    ],
+    greeting: "Bueno... decime qué pasó. 🔥",
+    phrase: "Quedarse callado no siempre es la mejor opción."
   },
+
   sadness: {
     name: "Tristeza",
-    status: "En línea · acá para escucharte",
-    tagline: "Escucho y valido lo que sentís, sin apurar nada.",
-    helps: ["Hablar de lo que te pasa", "Sentirte acompañado/a", "Procesar una emoción", "Bajar el ritmo"],
-    greeting: "Hola... estoy acá si me necesitás 💙",
+    status: "En línea · acá para acompañarte",
+    tagline: "No hace falta estar bien todo el tiempo.",
+    helps: [
+      "Hablar de lo que sentís",
+      "Encontrar contención",
+      "Procesar emociones",
+      "Tomarte un respiro"
+    ],
+    greeting: "Hola... 💙 Estoy acá para escucharte.",
+    phrase: "A veces, sentir también es una forma de avanzar."
   },
+
   anxiety: {
     name: "Ansiedad",
-    status: "En línea · siempre alerta",
-    tagline: "Pienso en todos los escenarios posibles, por las dudas.",
-    helps: ["Organizar pendientes", "Anticipar problemas", "Prepararte para algo", "Calmar los nervios"],
-    greeting: "¿Pasa algo? ¡Contame todo, necesito saber! 😰",
-  },
+    status: "En línea · pensando un paso adelante",
+    tagline: "Siempre imagino todos los escenarios posibles.",
+    helps: [
+      "Organizar ideas",
+      "Prepararte para desafíos",
+      "Reducir la incertidumbre",
+      "Ordenar tus pendientes"
+    ],
+    greeting: "¡Esperá! 😰 Contame bien qué está pasando.",
+    phrase: "Respiremos primero... después resolvemos lo demás."
+  }
 };
 
 const ORDER = ["joy", "anger", "sadness", "anxiety"];
@@ -43,7 +70,11 @@ const ICON_BACK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" s
 function dotsTemplate(activeKey) {
   return ORDER.map((key) => {
     const isActive = key === activeKey ? "is-active" : "";
-    return `<a class="emotion-dot ${key} ${isActive}" href="/chat/${key}" aria-label="Chatear con ${EMOTIONS[key].name}"></a>`;
+    return `
+      <a class="emotion-dot ${key} ${isActive}" href="/chat/${key}" aria-label="Chatear con ${EMOTIONS[key].name}">
+        <img src="/assets/img/${key}.png" alt="" />
+      </a>
+    `;
   }).join("");
 }
 
@@ -57,28 +88,27 @@ export function renderChat(emotionParam) {
   const app = document.getElementById("app");
 
   app.innerHTML = `
-    <div id="chatbox" class="${key}">
-      <div class="chatbox__topbar">
-        <h1 class="chatbox__title">Chat con tus <span>EMOCIONES</span></h1>
+    <div class="chatbox__topbar">
+      <h1 class="chatbox__title">Chat con tus <span>EMOCIONES</span></h1>
+      <span class="content__dots">
+        <p class="header__subtitle">¿Con cuál querés hablar hoy?</p>
         <div class="chatbox__dots">${dotsTemplate(key)}</div>
-      </div>
+      </span>
+    </div>
 
+    <div id="chatbox" class="${key}">
       <div class="chatbox__body">
-        <!-- Sidebar: oculto en mobile, visible en desktop (ver mediaquery en chatbox.css) -->
         <aside class="chat-sidebar">
-          <a class="btn-back" href="/home" aria-label="Volver a home">${ICON_BACK}</a>
           <img class="chat-sidebar__avatar" src="/assets/img/${key}.png" alt="${data.name}" />
           <h2 class="chat-sidebar__name">${data.name}</h2>
           <p class="chat-sidebar__tagline">${data.tagline}</p>
           <p class="chat-sidebar__label">Puedo ayudarte con:</p>
           <ul class="chat-sidebar__list">${helps}</ul>
+          <p class="chat-sidebar__phrase"> ${data.phrase}</p>
         </aside>
 
         <section class="chat-main">
           <header class="chat-header">
-            <a class="btn-back chat-header__back" href="/home" aria-label="Volver a home">
-              ${ICON_BACK}
-            </a>
             <img class="chat-header__avatar" src="/assets/img/${key}.png" alt="${data.name}" />
             <div class="chat-header__info">
               <h2 class="chat-header__name">${data.name}</h2>
