@@ -29,9 +29,9 @@
 }
 
 .btn-about-close {
-  width: 34px;
-  height: 34px;
-  min-height: 34px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
   border-radius: 50%;
   border: none;
   background: var(--badge-bg);

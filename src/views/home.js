@@ -10,7 +10,9 @@ const EMOTIONS = [
 function cardTemplate({ key, name, desc }) {
   return `
     <a class="card ${key}" href="/chat/${key}">
-      <img src="/assets/img/${key}.png" alt="${name}" />
+      <div class="card__media">
+        <img src="/assets/img/${key}.png" alt="${name}" />
+      </div>
       <div class="card__info">
         <h3>${name}</h3>
         <p>${desc}</p>

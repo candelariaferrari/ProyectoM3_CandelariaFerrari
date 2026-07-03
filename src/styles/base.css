@@ -46,6 +46,7 @@ a {
   --text-secondary: #9aa5c1;
   --accent-neutral: #6c63ff;
   --accent-neutral-2: #b25bc7;
+  --decor-blob-2: #ff6d00;
 
   /* ── Neutros absolutos ── */
   --white: #ffffff;
@@ -108,12 +109,15 @@ a {
   --f-desc: 0.85rem;
   --f-small: 0.8rem;
   --f-medium: 0.9rem;
+  --f-large: 1rem;
+  --f-xlarge:1.2rem;
+  --f-xxlarge:1.5rem;
 
   /* ── Cards / grid ── */
   --card-radius: 16px;
-  --card-aspect: 5 / 7;
+  --card-aspect: 4/5;
   --grid-gap: 1rem;
-  --content-max-width: 480px; 
+  --content-max-width: 480px;
 
   /* ── Transiciones ── */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -232,7 +236,7 @@ body::after {
   right: -110px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, #ff6d00, transparent 70%);
+  background: radial-gradient(circle, var(--decor-blob-2), transparent 70%);
   opacity: 0.14;
 }
 
@@ -252,7 +256,10 @@ body::after {
 @media (min-width: 768px) {
   :root {
     --f-title: 1.75rem;
+    --f-subtitle: 1.05rem;
     --f-badge: 0.75rem;
+    --f-name: 1.1rem;
+    --f-desc: 0.95rem;
     --grid-gap: 1.5rem;
     --content-max-width: 620px;
   }
@@ -261,7 +268,10 @@ body::after {
 @media (min-width: 1024px) {
   :root {
     --f-title: 2.25rem;
+    --f-subtitle: 1.15rem;
     --f-badge: 0.8125rem;
+    --f-name: 1.25rem;
+    --f-desc: 1rem;
     --grid-gap: 2rem;
     --content-max-width: 920px;
   }
@@ -283,10 +293,12 @@ body::after {
 }
 
 @keyframes pulse-text {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.6;
   }
@@ -297,6 +309,7 @@ body::after {
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -304,12 +317,14 @@ body::after {
 }
 
 @keyframes typing-bounce {
+
   0%,
   60%,
   100% {
     transform: translateY(0);
     opacity: 0.5;
   }
+
   30% {
     transform: translateY(-4px);
     opacity: 1;
@@ -321,6 +336,7 @@ body::after {
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -329,6 +345,7 @@ body::after {
 
 /* Accesibilidad: respetar reduce-motion en toda la app */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
