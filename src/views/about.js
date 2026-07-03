@@ -3,10 +3,10 @@
 const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
 const EMOTIONS = [
-  { key: "joy", name: "Alegría", desc: "Siempre ve el lado bueno" },
-  { key: "anger", name: "Furia", desc: "Directo y sin filtro" },
-  { key: "anxiety", name: "Ansiedad", desc: "Siempre alerta, siempre lista" },
-  { key: "sadness", name: "Tristeza", desc: "Empatía ante todo" },
+  { key: "joy", name: "Alegría", desc: "Siempre encuentro un motivo para sonreír." },
+  { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
+  { key: "anxiety", name: "Ansiedad", desc: "Siempre imagino todos los escenarios posibles." },
+  { key: "sadness", name: "Tristeza", desc: "No hace falta estar bien todo el tiempo." },
 ];
 
 function emotionCard({ key, name, desc }) {
@@ -30,7 +30,7 @@ export function renderAbout() {
   app.innerHTML = `
     <div id="About">
       <nav class="about-nav">
-        <p class="about-nav__brand">INTENSAMENTE</p>
+         <p class="header__movie">Intensamente</p>
         <a class="btn-about-close" href="/home" aria-label="Volver a home">
           ${ICON_CLOSE}
         </a>
@@ -77,6 +77,7 @@ export function renderAbout() {
 
       <footer class="footer">
         <a>@candeferrari</a>
+        <a class="btn-about" href="/home">Home</a>
       </footer>
     </div>
   `;

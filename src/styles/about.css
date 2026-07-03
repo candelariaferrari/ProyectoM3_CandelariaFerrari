@@ -50,7 +50,7 @@
 }
 
 .about-card {
-  background: var(--card-info-bg);
+  background: var(--overlay-white-10);
   border-radius: 16px;
   padding: var(--space-lg);
   margin: var(--space-lg) 0;

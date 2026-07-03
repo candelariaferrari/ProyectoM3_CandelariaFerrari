@@ -190,6 +190,18 @@
       grid-template-columns: repeat(4, 1fr);
       margin: auto;
     }
+
+    /* La card seleccionada (.active) muestra la descripción igual que el
+       hover, pero solo en desktop -en mobile/tablet el nombre siempre
+       queda compacto y sin descripción, la elegiste así antes. */
+    .card.active .card__info {
+      height: 40%;
+    }
+
+    .card.active .card__info p {
+      opacity: 0.85;
+      line-height: 1.3;
+    }
   }
   
   /* =============================================================
