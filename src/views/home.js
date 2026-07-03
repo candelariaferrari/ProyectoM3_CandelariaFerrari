@@ -7,9 +7,18 @@ const EMOTIONS = [
   { key: "sadness", name: "Tristeza", desc: "Empatía ante todo" },
 ];
 
+
+let selectedKey = EMOTIONS[0].key;
+
 function cardTemplate({ key, name, desc }) {
+  const isActive = key === selectedKey;
   return `
-    <a class="card ${key}" href="/chat/${key}">
+    <button
+      type="button"
+      class="card ${key} ${isActive ? "active" : ""}"
+      data-emotion="${key}"
+      aria-pressed="${isActive}"
+    >
       <div class="card__media">
         <img src="/assets/img/${key}.png" alt="${name}" />
       </div>
@@ -17,7 +26,7 @@ function cardTemplate({ key, name, desc }) {
         <h3>${name}</h3>
         <p>${desc}</p>
       </div>
-    </a>
+    </button>
   `;
 }
 
@@ -37,7 +46,7 @@ export function renderHome() {
         ${cards}
       </div>
 
-      <a class="btn-chat" href="/chat/joy">Charlemos</a>
+      <a class="btn-chat" id="btnChat" href="/chat/${selectedKey}">Charlemos</a>
 
       <footer class="footer">
         <a>@candeferrari</a>
@@ -45,4 +54,25 @@ export function renderHome() {
       </footer>
     </div>
   `;
+
+  attachCardSelection();
+}
+
+function attachCardSelection() {
+  const cards = document.querySelectorAll(".container-cards .card");
+  const btnChat = document.getElementById("btnChat");
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      selectedKey = card.dataset.emotion;
+
+      cards.forEach((c) => {
+        const isActive = c === card;
+        c.classList.toggle("active", isActive);
+        c.setAttribute("aria-pressed", String(isActive));
+      });
+
+      btnChat.setAttribute("href", `/chat/${selectedKey}`);
+    });
+  });
 }
