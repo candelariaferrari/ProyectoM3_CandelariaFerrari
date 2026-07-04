@@ -13,7 +13,7 @@
     width: 100%;
     margin: 0 auto var(--space-lg);
   }
-  
+
   .header__title {
     color: var(--text-primary-neutral);
     font-family: var(--font-display), sans-serif;
@@ -24,8 +24,8 @@
     margin: var(--space-sm) auto var(--space-xs);
     transition: font-size var(--transition-medium);
   }
-  
-  
+
+
   .header__subtitle {
     font-size: var(--f-subtitle);
     font-weight: 600;
@@ -34,7 +34,7 @@
     background-clip: text;
     color: transparent;
   }
-  
+
   /* ── Badge  ── */
   .header__movie {
     display: inline-block;
@@ -51,7 +51,7 @@
     color: var(--text-secondary);
     margin-bottom: var(--space-md);
   }
-  
+
   /* =============================================================
      Sistema de CARDS
      ============================================================= */
@@ -64,7 +64,7 @@
     justify-content: center;
     transition: gap var(--transition-medium);
   }
-  
+
   .card {
     appearance: none;
     -webkit-appearance: none;
@@ -118,10 +118,10 @@
     transition: transform var(--transition-medium);
   }
 
-  
+
   .card:hover img {
     transform: scale(1.05);
-  
+
   }
 
   .card.joy,
@@ -203,7 +203,7 @@
       line-height: 1.3;
     }
   }
-  
+
   /* =============================================================
      FOOTER
      ============================================================= */
@@ -221,12 +221,12 @@
     color: var(--text-secondary);
     transition: max-width var(--transition-medium);
   }
-  
+
   .footer a {
     color: inherit;
     text-decoration: none;
   }
-  
+
   .btn-about {
     display: inline-flex;
     align-items: center;
@@ -251,12 +251,12 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 16px var(--glow-accent-35);
   }
-  
+
   .btn-about:active {
     transform: translateY(0);
     box-shadow: none;
   }
-  
+
   /* =============================================================
      LOADING (estado de espera de respuesta de la AI)
      ============================================================= */
@@ -268,7 +268,7 @@
     gap: var(--space-md);
     padding: var(--space-xl);
   }
-  
+
   .spinner {
     width: var(--spinner-size);
     height: var(--spinner-size);
@@ -277,13 +277,13 @@
     border-top-color: var(--accent-neutral);
     animation: spin 0.9s var(--ease) infinite;
   }
-  
+
   .loading-text {
     font-size: 0.85rem;
     color: var(--text-secondary);
     animation: pulse-text 1.6s ease-in-out infinite;
   }
-  
+
   /* =============================================================
      ERROR (fallos de la API / red)
      ============================================================= */
@@ -292,7 +292,7 @@
     justify-content: center;
     padding: var(--space-lg);
   }
-  
+
   .error-card {
     background: var(--white);
     color: var(--black-soft);
@@ -304,31 +304,31 @@
     box-shadow: 0 10px 30px var(--overlay-dark-25);
     border-top: 4px solid var(--error-server);
   }
-  
+
   .error-card.error--network {
     border-top-color: var(--error-network);
   }
-  
+
   .error-card.error--server {
     border-top-color: var(--error-server);
   }
-  
+
   .error-card.error--rate-limit {
     border-top-color: var(--error-rate-limit);
   }
-  
+
   .error-card h4 {
     font-family: var(--font-display), sans-serif;
     font-weight: 800;
     margin-bottom: var(--space-sm);
   }
-  
+
   .error-card p {
     font-size: 0.85rem;
     color: var(--gray-dark);
     margin-bottom: var(--space-md);
   }
-  
+
   .btn-retry {
     min-height: 44px;
     padding: 0 1.2rem;
@@ -340,28 +340,28 @@
     cursor: pointer;
     transition: transform var(--transition-fast), filter var(--transition-fast);
   }
-  
+
   .btn-retry:hover {
     transform: translateY(-2px);
     filter: brightness(1.05);
   }
-  
+
   .btn-retry:active {
     transform: translateY(0);
   }
-  
+
   /* =============================================================
-     Animación de entrada 
+     Animación de entrada
      == */
   .container-header,
   .container-cards {
     animation: fade-in-up 0.6s var(--ease) backwards;
   }
-  
+
   .container-cards {
     animation-delay: 0.1s;
   }
-  
+
   /* =============================================================
      NOT FOUND (404)
      ============================================================= */
@@ -375,18 +375,18 @@
     gap: var(--space-md);
     padding: var(--space-xl);
   }
-  
+
   #notFound h1 {
     font-family: var(--font-display), sans-serif;
     font-weight: 900;
     font-size: 3rem;
     color: var(--text-primary-neutral);
   }
-  
+
   #notFound p {
     color: var(--text-secondary);
   }
-  
+
   #notFound .btn-chat {
     max-width: 240px;
   }

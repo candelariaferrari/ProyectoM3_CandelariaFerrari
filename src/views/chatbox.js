@@ -1,6 +1,8 @@
 // Vista de chat, una por emoción.
 // La emoción llega como parámetro de la URL (/chat/:emotion), capturado por el router.
 
+import { initChat } from "../chat.js";
+
 export const EMOTIONS = {
   joy: {
     name: "Alegría",
@@ -119,11 +121,7 @@ export function renderChat(emotionParam) {
             </a>
           </header>
 
-          <main class="chat-messages" id="chatMessages">
-            <div class="message message--char">
-              <p>${data.greeting}</p>
-            </div>
-          </main>
+          <main class="chat-messages" id="chatMessages"></main>
 
           <form class="chat-composer" id="chatComposer">
             <input
@@ -142,6 +140,5 @@ export function renderChat(emotionParam) {
     </div>
   `;
 
-  // TODO: acá engancho el listener de chat.js (envío de mensajes en memoria)
-  // ej: attachChatComposer(key);
+  initChat(key, data.greeting);
 }

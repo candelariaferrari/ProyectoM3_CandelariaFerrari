@@ -12,7 +12,7 @@ const routes = [
   { pattern: /^\/about$/, render: renderAbout },
 ];
 
-// para Live Server (y algunos hosts estáticos) 
+// para Live Server (y algunos hosts estáticos)
 function normalizePath(pathname) {
   const cleaned = pathname.replace(/\/index\.html$/, "/");
   return cleaned === "" ? "/" : cleaned;
