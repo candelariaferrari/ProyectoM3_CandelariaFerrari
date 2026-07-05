@@ -1,14 +1,10 @@
-// Lógica específica del chat: historial en memoria, envío de mensajes,
-// estado de "escribiendo..." y scroll automático. Separado de chatbox.js
-// (que solo arma el HTML de la vista) y de router.js (que solo decide qué
-// vista mostrar), siguiendo la recomendación de la consigna de separar la
-// lógica de chat del routing.
+// Lógica específica del chat: historial en memoria, envío de mensajes a la
+// serverless function de Gemini, estado de "escribiendo...", errores y
+// scroll automático.
 
 import { escapeHtml, createMessage } from "./utils.js";
 
-// Historial en memoria por personaje. Vive solo mientras la pestaña esté
-// abierta -si se recarga la página se pierde-, tal como pide la consigna
-// para el alcance mínimo. La key es el "key" del personaje (joy, anger...).
+// Historial en memoria por personaje. Vive solo mientras la pestaña esté abierta -si se recarga la página se pierde
 const conversations = new Map();
 
 function getConversation(key, greeting) {
@@ -31,32 +27,86 @@ function typingBubbleHtml() {
   `;
 }
 
-function renderMessages(container, conversation, isTyping) {
+// Traduce un error (de red o de la API) a lo que necesita la tarjeta de error
+function errorInfoFor(error) {
+  if (error.status === 429) {
+    return {
+      variant: "rate-limit",
+      title: "Muchos mensajes seguidos",
+      message: error.message || "Esperá unos segundos antes de volver a escribir.",
+    };
+  }
+  if (error.status) {
+    return {
+      variant: "server",
+      title: "Algo salió mal",
+      message: error.message || "El personaje no pudo responder. Probá de nuevo.",
+    };
+  }
+  // Sin "status" quiere decir que el fetch nunca llegó a responder lo tratamos como error de red.
+  return {
+    variant: "network",
+    title: "Sin conexión",
+    message: "No pudimos conectarnos. Revisá tu internet e intentá de nuevo.",
+  };
+}
+
+function errorCardHtml(error) {
+  const { variant, title, message } = errorInfoFor(error);
+  return `
+    <div class="error">
+      <div class="error-card error--${variant}">
+        <h4>${escapeHtml(title)}</h4>
+        <p>${escapeHtml(message)}</p>
+        <button type="button" class="btn-retry">Reintentar</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderMessages(container, conversation, { isTyping = false, error = null } = {}) {
   const bubbles = conversation.map(messageBubbleHtml).join("");
-  container.innerHTML = bubbles + (isTyping ? typingBubbleHtml() : "");
-  // Scroll automático al último mensaje: sin esto, en conversaciones largas
-  // el usuario tendría que bajar manualmente cada vez que llega una respuesta.
+  const extra = error ? errorCardHtml(error) : isTyping ? typingBubbleHtml() : "";
+  container.innerHTML = bubbles + extra;
+  // Scroll automático al último mensaje
   container.scrollTop = container.scrollHeight;
 }
 
-// Respuestas de relleno SOLO para probar la interfaz sin depender todavía
-// de Gemini (paso 4 de la consigna). Esto se reemplaza por un fetch real a
-// /api/functions en el paso 5-7, sin tocar el resto de esta lógica.
-const FAKE_REPLIES = {
-  joy: "¡Eso que contás también tiene su lado bueno! 🌟",
-  anger: "¡Tenés todo el derecho a sentirte así! Decilo sin miedo.",
-  sadness: "Está bien sentir eso. Estoy acá, tomate tu tiempo.",
-  anxiety: "Ok, respiremos. Pensemos juntos un paso a la vez.",
-};
+//  Llama a la serverless function /api/functions, que es la única que conoce la API key y habla con Gemini. 
+async function requestReply(key, conversation) {
+  const response = await fetch("/api/functions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ character: key, messages: conversation }),
+  });
 
-function fakeReplyFor(key) {
-  return FAKE_REPLIES[key] || "Gracias por contarme.";
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(data.error || "Error desconocido");
+    error.status = response.status;
+    throw error;
+  }
+
+  return data.text;
+}
+
+//  Manda el mensaje a Gemini y actualiza la UI según lo que pase.
+// Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
+async function sendAndRender(key, conversation, messagesContainer) {
+  renderMessages(messagesContainer, conversation, { isTyping: true });
+
+  try {
+    const reply = await requestReply(key, conversation);
+    conversation.push(createMessage("char", reply));
+    renderMessages(messagesContainer, conversation, {});
+  } catch (error) {
+    console.error("[chat] Error pidiendo respuesta:", error);
+    renderMessages(messagesContainer, conversation, { error });
+  }
 }
 
 /**
- * Engancha el formulario de chat ya montado en el DOM para un personaje.
- * Se llama una vez, después de que chatbox.js insertó el HTML en #app.
- *
  * @param {string} key - clave del personaje (joy, anger, sadness, anxiety)
  * @param {string} greeting - saludo inicial de ese personaje
  */
@@ -68,11 +118,10 @@ export function initChat(key, greeting) {
   if (!form || !input || !messagesContainer) return;
 
   const conversation = getConversation(key, greeting);
-  renderMessages(messagesContainer, conversation, false);
+  renderMessages(messagesContainer, conversation, {});
 
   form.addEventListener("submit", (event) => {
-    // Sin esto, el <form> recarga la página al enviar (comportamiento
-    // nativo del navegador) y perderíamos toda la SPA.
+    // Sin esto, el <form> recarga la página al enviar (comportamiento nativo del navegador) y perderíamos toda la SPA.
     event.preventDefault();
 
     const text = input.value.trim();
@@ -80,13 +129,13 @@ export function initChat(key, greeting) {
 
     conversation.push(createMessage("user", text));
     input.value = "";
-    renderMessages(messagesContainer, conversation, true);
+    sendAndRender(key, conversation, messagesContainer);
+  });
 
-    // TODO(paso 5-7): reemplazar este setTimeout por un fetch a
-    // /api/functions que llame a Gemini con el historial completo.
-    window.setTimeout(() => {
-      conversation.push(createMessage("char", fakeReplyFor(key)));
-      renderMessages(messagesContainer, conversation, false);
-    }, 900);
+  // El botón "Reintentar" se crea recién cuando hay un error
+  messagesContainer.addEventListener("click", (event) => {
+    if (event.target.closest(".btn-retry")) {
+      sendAndRender(key, conversation, messagesContainer);
+    }
   });
 }
