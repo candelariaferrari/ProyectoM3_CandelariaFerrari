@@ -58,8 +58,8 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 - **Frontend:** HTML, CSS y JavaScript vanilla (sin frameworks ni librerías de UI). Diseño mobile-first con Flexbox/Grid y media queries.
 - **CSS modular:** los estilos están separados por responsabilidad (`base`, `shared` y un archivo por vista). Esto mantiene cada archivo pequeño, facilita encontrar las clases rápidamente y hace más simple el mantenimiento del proyecto.
 - **Routing:** SPA con History API (`pushState` + evento `popstate`), sin recargar la página.
-- **Estado del chat:** historial en memoria (un `Map` por personaje), vive solo durante la sesión — se pierde al recargar, tal como pide la consigna.
-- **IA:** Google Gemini (Interactions API, modelo `gemini-3.5-flash`), consumida vía `fetch` nativo desde una Vercel Serverless Function — la API key nunca se expone al navegador.
+- **Estado del chat:** historial en memoria (un `Map` por personaje), vive solo durante la sesión — se pierde al recargar, tal como pide la consigna. Se puede reiniciar manualmente con el botón de reset del chat.
+- **IA:** Google Gemini (Interactions API, modelo `gemini-3.5-flash`), consumida vía `fetch` nativo desde una Vercel Serverless Function — la API key nunca se expone al navegador. En cada request se manda el historial completo (recortado a los últimos 20 mensajes) para que el personaje mantenga contexto de la conversación.
 - **Tests:** Vitest, sobre las funciones puras (utilitarias, parseo de la respuesta de la API, clasificación de errores).
 - **Deploy:** Vercel, con deploy automático en cada `git push` a `main`.
 
@@ -67,24 +67,22 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 
 ```
 ├── index.html            # entry point (en la raíz: lo requiere Vercel)
-├── styles/               # base.css, shared.css, home.css, chatbox.css, about.css
-├── assets/img/           # avatares de los 4 personajes
+├── styles/               # los CSS, separados por tema: base.css, shared.css, home.css, chatbox.css, about.css
+├── assets                # avatares de los 4 personajes y capturas de pantalla.
 ├── src/
 │   ├── main.js           # arranca el router y la navegación
 │   ├── router.js         # matching de rutas + history API
 │   ├── navigation.js     # intercepta clicks en <a> para navegar sin recargar
-│   ├── chat.js           # estado del chat, fetch a /api/functions, errores
-│   ├── utils.js          # funciones puras (escapeHtml, createMessage)
-│   └── views/            # home.js, chatbox.js, about.js, notFound.js
+│   ├── chat.js           # toda la lógica del chat: estado del chat, fetch a /api/functions, errores
+│   ├── utils.js          # funciones puras (escapeHtml, createMessage) reutilizables
+│   └── views/            # una función por pantalla, arma el HTML de cada una: home.js, chatbox.js, about.js, notFound.js
 ├── api/
-│   ├── functions.js      # serverless function: valida la petición HTTP
-│   └── services/
-│       └── geminiService.js  # arma el payload, llama a Gemini y parsea la respuesta
-├── test/
+│   ├── functions.js      # habla con Gemini sin exponer API key, serverless function: valida la petición HTTP
+├── test/.                # los tests automáticos (Vitest)
 │   ├── utils.test.js
 │   └── app.test.js
-├── vercel.json           # rewrites (SPA fallback + /api passthrough)
-└── vitest.config.js
+├── vercel.json           # configuración para que Vercel sirva bien la SPA, rewrites (SPA fallback + /api passthrough)
+└── vitest.config.js.     # configuración de los tests
 ```
 
 ## Correrlo en local
@@ -171,10 +169,25 @@ npm run test:watch  # los re-corre en cada cambio
 
 Son 11 tests en total, sobre las funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API, así que no hace falta mockear nada — reciben un dato y siempre devuelven el mismo resultado):
 
-- **`test/utils.test.js`** — `escapeHtml`: que escape los 5 caracteres especiales de HTML, que no modifique un texto sin caracteres especiales, y que convierta a string valores que no lo son (ej. un número). `createMessage`: que devuelva la forma `{ id, role, text }` correcta, y que nunca genere el mismo `id` dos veces.
-- **`test/app.test.js`** — `extractText` (el parseo de la respuesta cruda de Gemini): que extraiga bien el texto de una respuesta válida (incluyendo que recorte espacios en blanco), y que devuelva `""` en vez de romper si la respuesta viene sin el `step` esperado o directamente vacía. `errorInfoFor` (la clasificación de errores para la tarjeta de error del chat): que un status 429 se clasifique como `rate-limit`, cualquier otro status como `server`, y la ausencia de status (fetch que nunca llegó a responder) como `network`.
-
-No se testea la lógica que toca el DOM directamente (por ejemplo `renderMessages` o `initChat`) porque para eso haría falta simular un navegador (jsdom) y esas funciones no tienen lógica de negocio propia — solo llaman a las funciones de arriba y actualizan la pantalla.
+```bash
+  ✓ test/app.test.js (6)
+   ✓ extractText (parseo de la respuesta de Gemini) (3)
+     ✓ extrae el texto de una respuesta válida de Gemini
+     ✓ devuelve "" si la respuesta no trae ningún step de tipo model_output
+     ✓ devuelve "" si "steps" directamente no viene en la respuesta
+   ✓ errorInfoFor (mapeo de errores a la tarjeta de error del chat) (3)
+     ✓ clasifica un status 429 como rate-limit
+     ✓ clasifica cualquier otro status HTTP como error de servidor
+     ✓ clasifica un error sin status (fetch que nunca respondió) como error de red
+  ✓ test/utils.test.js (5)
+   ✓ escapeHtml (3)
+     ✓ escapa los 5 caracteres especiales de HTML
+     ✓ no modifica un texto que no tiene caracteres especiales
+     ✓ convierte a string cualquier valor que no sea string (ej: number)
+   ✓ createMessage (2)
+     ✓ crea un mensaje con la forma { id, role, text }
+     ✓ genera un id distinto en cada llamada, incluso con el mismo texto
+```
 
 ## Deploy
 
@@ -192,9 +205,10 @@ Para deployarlo desde cero en tu propia cuenta:
 - Navegación SPA sin recargar la página.
 - Chat con cuatro emociones diferentes.
 - Cada personaje tiene su propio system prompt.
-- Historial independiente para cada emoción durante la sesión.
+- Historial independiente para cada emoción durante la sesión (recortado a los últimos 20 mensajes al mandarlo a Gemini).
+- Botón para reiniciar la conversación con un personaje.
 - Indicador de "escribiendo...".
-- Manejo de errores de la API.
+- Manejo de errores de la API, con cooldown para evitar el rate-limit del tier gratuito.
 - Scroll automático.
 - Responsive (mobile, tablet y desktop).
 - API Key protegida mediante Vercel Functions.
