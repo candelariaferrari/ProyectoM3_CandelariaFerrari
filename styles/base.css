@@ -250,6 +250,20 @@ body::after {
   width: 100%;
 }
 
+/* Segunda barrera de contención para la vista de Chat, en TODAS las
+   pantallas (no solo desktop). #chatbox ya tiene su propio height fijo +
+   overflow:hidden, pero por las dudas -sea por redondeo, por cómo cada
+   navegador calcula flexbox, o por el comportamiento elástico de Safari en
+   iOS- si algo igual se desborda un pixel, que no se note: forzamos que
+   #app y body también queden clavados a una pantalla y recorten cualquier
+   sobrante, exclusivamente cuando adentro está el chat. */
+body:has(#chatbox),
+#app:has(#chatbox) {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 /* =============================================================
    Breakpoints globales — tokens que otras hojas consumen
    ============================================================= */
