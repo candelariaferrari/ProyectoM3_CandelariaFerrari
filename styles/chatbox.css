@@ -313,7 +313,10 @@
   border-radius: 999px;
   padding: 0.7rem 1rem;
   font-family: var(--font-body), sans-serif;
-  font-size: var(--f-medium);
+  /* 16px (no var(--f-medium), que es 14.4px): por debajo de 16px, iOS Safari
+     hace zoom automático al hacer foco en el input, lo que agranda toda la
+     pantalla y corta el botón de enviar. */
+  font-size: 16px;
   background: var(--overlay-white-92);
   color: var(--black-soft);
   outline: none;
@@ -326,6 +329,11 @@
 
 .chat-composer input:focus-visible {
   box-shadow: 0 0 0 3px var(--glow);
+}
+
+.chat-composer input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-send {
@@ -398,7 +406,12 @@
     justify-content: space-between;
     padding: var(--space-md) var(--space-xl) var(--space-xs);
     background: transparent;
+    /* Mismo ancho y max-width que #chatbox (90% con tope de 1230px). Antes
+       el topbar solo tenía width:90% sin max-width, así que en pantallas muy
+       grandes terminaba siendo más ancho que #chatbox (que sí topea en
+       1230px) y quedaban descentrados entre sí. */
     width: 90%;
+    max-width: 1230px;
     margin: 1rem auto 0rem;
   }
 
