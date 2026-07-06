@@ -28,7 +28,7 @@ function typingBubbleHtml() {
 }
 
 // Traduce un error (de red o de la API) a lo que necesita la tarjeta de error
-function errorInfoFor(error) {
+export function errorInfoFor(error) {
   if (error.status === 429) {
     return {
       variant: "rate-limit",
@@ -72,7 +72,7 @@ function renderMessages(container, conversation, { isTyping = false, error = nul
   container.scrollTop = container.scrollHeight;
 }
 
-//  Llama a la serverless function /api/functions, que es la única que conoce la API key y habla con Gemini. 
+//  Llama a la serverless function que es la única que conoce la API key 
 async function requestReply(key, conversation) {
   const response = await fetch("/api/functions", {
     method: "POST",
@@ -91,8 +91,7 @@ async function requestReply(key, conversation) {
   return data.text;
 }
 
-//  Manda el mensaje a Gemini y actualiza la UI según lo que pase.
-// Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
+//  Manda el mensaje a Gemini y actualiza la UI según lo que pase. Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
 async function sendAndRender(key, conversation, messagesContainer) {
   renderMessages(messagesContainer, conversation, { isTyping: true });
 

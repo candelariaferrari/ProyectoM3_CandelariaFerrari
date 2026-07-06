@@ -142,7 +142,7 @@ Ansiedad:
 };
 
 /** Recorre la respuesta cruda de la API de Gemini { steps: [ { type: "model_output", content: [ { type: "text", text } ] } ] } */
-function extractText(data) {
+export function extractText(data) {
   const step = (data.steps || []).find((s) => s.type === "model_output");
   const textBlock = step?.content?.find((c) => c.type === "text");
   return textBlock?.text?.trim() || "";
