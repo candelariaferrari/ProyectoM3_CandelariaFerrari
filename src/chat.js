@@ -51,6 +51,36 @@ export function errorInfoFor(error) {
   };
 }
 
+// Cooldown después de cada respuesta: el tier gratuito de Gemini tiene un
+// límite de peticiones por minuto muy bajo, así que mandar mensajes muy
+// seguido dispara el error de rate-limit enseguida. En vez de solo mostrar
+// el error después de que pasa, prevenimos que pase deshabilitando el
+// composer unos segundos luego de cada respuesta (éxito o error).
+const SEND_COOLDOWN_MS = 4000;
+
+function setComposerDisabled(input, button, disabled) {
+  input.disabled = disabled;
+  button.disabled = disabled;
+}
+
+function startCooldown(input, button) {
+  setComposerDisabled(input, button, true);
+  const originalPlaceholder = input.placeholder;
+  let remainingSeconds = Math.ceil(SEND_COOLDOWN_MS / 1000);
+  input.placeholder = `Esperá ${remainingSeconds}s antes de escribir de nuevo...`;
+
+  const intervalId = setInterval(() => {
+    remainingSeconds -= 1;
+    if (remainingSeconds <= 0) {
+      clearInterval(intervalId);
+      input.placeholder = originalPlaceholder;
+      setComposerDisabled(input, button, false);
+      return;
+    }
+    input.placeholder = `Esperá ${remainingSeconds}s antes de escribir de nuevo...`;
+  }, 1000);
+}
+
 function errorCardHtml(error) {
   const { variant, title, message } = errorInfoFor(error);
   return `
@@ -92,7 +122,7 @@ async function requestReply(key, conversation) {
 }
 
 //  Manda el mensaje a Gemini y actualiza la UI según lo que pase. Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
-async function sendAndRender(key, conversation, messagesContainer) {
+async function sendAndRender(key, conversation, messagesContainer, input, sendButton) {
   renderMessages(messagesContainer, conversation, { isTyping: true });
 
   try {
@@ -102,6 +132,10 @@ async function sendAndRender(key, conversation, messagesContainer) {
   } catch (error) {
     console.error("[chat] Error pidiendo respuesta:", error);
     renderMessages(messagesContainer, conversation, { error });
+  } finally {
+    // Se ejecuta tanto si salió bien como si hubo error (incluyendo el 429):
+    // así "Reintentar" tampoco puede spamear la API mientras dura el cooldown.
+    startCooldown(input, sendButton);
   }
 }
 
@@ -113,8 +147,9 @@ export function initChat(key, greeting) {
   const form = document.getElementById("chatComposer");
   const input = document.getElementById("chatInput");
   const messagesContainer = document.getElementById("chatMessages");
+  const sendButton = form?.querySelector(".btn-send");
 
-  if (!form || !input || !messagesContainer) return;
+  if (!form || !input || !messagesContainer || !sendButton) return;
 
   const conversation = getConversation(key, greeting);
   renderMessages(messagesContainer, conversation, {});
@@ -128,13 +163,13 @@ export function initChat(key, greeting) {
 
     conversation.push(createMessage("user", text));
     input.value = "";
-    sendAndRender(key, conversation, messagesContainer);
+    sendAndRender(key, conversation, messagesContainer, input, sendButton);
   });
 
   // El botón "Reintentar" se crea recién cuando hay un error
   messagesContainer.addEventListener("click", (event) => {
     if (event.target.closest(".btn-retry")) {
-      sendAndRender(key, conversation, messagesContainer);
+      sendAndRender(key, conversation, messagesContainer, input, sendButton);
     }
   });
 }
