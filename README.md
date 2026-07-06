@@ -1,5 +1,4 @@
 # 🎭 Chat con tus Emociones
-# 🎭 Chat con tus Emociones
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black)
 ![Gemini](https://img.shields.io/badge/Google-Gemini-blue)
@@ -19,15 +18,18 @@ Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 ---
 
 ## Índice
-- [¿Por qué este proyecto?](#¿Por qué este proyecto?)
+- [¿Por qué este proyecto?](#por-qué-este-proyecto)
 - [Los personajes](#los-personajes)
 - [Stack y arquitectura](#stack-y-arquitectura)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Correrlo en local](#correrlo-en-local)
 - [Tests](#tests)
 - [Deploy](#deploy)
+- [Funcionalidades](#funcionalidades)
 - [Capturas](#capturas)
-- [Uso de IA en el desarrollo](#uso-de-ia-en-el-desarrollo)
+- [Uso de IA en el desarrollo](#uso-de-ia-como-herramienta-de-desarrollo)
+- [Sobre este proyecto](#sobre-este-proyecto)
+
 
 ---
 
