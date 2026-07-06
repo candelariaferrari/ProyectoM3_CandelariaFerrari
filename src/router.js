@@ -41,7 +41,6 @@ export function navigateTo(path) {
 }
 
 // Resalta con .active el link de navegación que corresponda a la ruta actual
-// (queda "inerte" hasta que agregue una navbar persistente con esa clase).
 function updateActiveLink() {
   const current = window.location.pathname;
   document.querySelectorAll(".navbar__links a").forEach((link) => {

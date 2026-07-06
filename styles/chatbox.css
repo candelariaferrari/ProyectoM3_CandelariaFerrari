@@ -213,7 +213,8 @@
   box-shadow: 0 0 8px var(--status-error);
 }
 
-.btn-close {
+.btn-close,
+.btn-reset {
   width: 44px;
   height: 44px;
   min-height: 44px;
@@ -230,7 +231,8 @@
     transform var(--transition-fast);
 }
 
-.btn-close:hover {
+.btn-close:hover,
+.btn-reset:hover {
   background: var(--overlay-white-28);
   transform: scale(1.05);
 }

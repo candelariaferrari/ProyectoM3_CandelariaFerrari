@@ -69,6 +69,8 @@ const ICON_SEND = `<svg viewBox="0 0 24 24" width="18" height="18" fill="current
 
 const ICON_BACK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
 
+const ICON_RESET = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
+
 function dotsTemplate(activeKey) {
   return ORDER.map((key) => {
     const isActive = key === activeKey ? "is-active" : "";
@@ -116,6 +118,9 @@ export function renderChat(emotionParam) {
               <h2 class="chat-header__name">${data.name}</h2>
               <p class="chat-header__status"><span class="status-dot"></span>${data.status}</p>
             </div>
+            <button type="button" class="btn-reset" id="btnResetChat" aria-label="Reiniciar conversación">
+              ${ICON_RESET}
+            </button>
             <a class="btn-close" href="/home" aria-label="Cerrar chat">
               ${ICON_CLOSE}
             </a>

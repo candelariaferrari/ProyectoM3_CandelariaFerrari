@@ -141,6 +141,17 @@ Ansiedad:
 `,
 };
 
+// Tope de mensajes que se mandan como contexto en cada request. Sin esto, una
+// charla muy larga mandaría el historial entero (y cada vez más grande) en
+// cada mensaje nuevo, gastando de más tokens del tier gratuito. Se queda con
+// los últimos N mensajes: suficiente para que el personaje mantenga contexto
+// reciente, sin que la conversación crezca sin límite.
+const MAX_HISTORY_MESSAGES = 20;
+
+function getTrimmedHistory(messages) {
+  return messages.slice(-MAX_HISTORY_MESSAGES);
+}
+
 /** Recorre la respuesta cruda de la API de Gemini { steps: [ { type: "model_output", content: [ { type: "text", text } ] } ] } */
 export function extractText(data) {
   const step = (data.steps || []).find((s) => s.type === "model_output");
@@ -169,10 +180,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Falta el historial de la conversación." });
   }
 
-  // Gemini no recuerda nada por su cuenta entre requests: cada llamada es
-  // independiente. Por eso mandamos SIEMPRE el historial completo, convertido
-  // de [{role, text}] (como lo guarda chat.js en memoria)
-  const transcript = messages
+  // historial recortado a los últimos MAX_HISTORY_MESSAGES, convertido de
+  // [{role, text}] (como lo guarda chat.js en memoria)
+  const transcript = getTrimmedHistory(messages)
     .map((m) => `${m.role === "user" ? "Usuario" : "Vos"}: ${m.text}`)
     .join("\n");
 

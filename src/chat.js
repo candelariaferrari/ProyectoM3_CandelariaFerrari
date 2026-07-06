@@ -14,6 +14,17 @@ function getConversation(key, greeting) {
   return conversations.get(key);
 }
 
+// Reinicia la charla de un personaje: borra todo lo hablado y la deja como
+// recién entrada (solo el saludo inicial). Muta el mismo array en vez de
+// reemplazarlo, para que initChat (que ya tiene una referencia a ese array
+// en sus listeners) vea el cambio sin tener que volver a conectar nada.
+function resetHistory(key, greeting) {
+  const conversation = getConversation(key, greeting);
+  conversation.length = 0;
+  conversation.push(createMessage("char", greeting));
+  return conversation;
+}
+
 function messageBubbleHtml(message) {
   const roleClass = message.role === "user" ? "message--user" : "message--char";
   return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)}</p></div>`;
@@ -124,6 +135,10 @@ async function requestReply(key, conversation) {
 //  Manda el mensaje a Gemini y actualiza la UI según lo que pase. Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
 async function sendAndRender(key, conversation, messagesContainer, input, sendButton) {
   renderMessages(messagesContainer, conversation, { isTyping: true });
+  // Deshabilitado también mientras se espera la respuesta (no solo después):
+  // sin esto, alcanzaba a mandar un segundo mensaje antes de que llegara el
+  // primero y se pisaban las respuestas.
+  setComposerDisabled(input, sendButton, true);
 
   try {
     const reply = await requestReply(key, conversation);
@@ -148,6 +163,7 @@ export function initChat(key, greeting) {
   const input = document.getElementById("chatInput");
   const messagesContainer = document.getElementById("chatMessages");
   const sendButton = form?.querySelector(".btn-send");
+  const resetButton = document.getElementById("btnResetChat");
 
   if (!form || !input || !messagesContainer || !sendButton) return;
 
@@ -171,5 +187,10 @@ export function initChat(key, greeting) {
     if (event.target.closest(".btn-retry")) {
       sendAndRender(key, conversation, messagesContainer, input, sendButton);
     }
+  });
+
+  resetButton?.addEventListener("click", () => {
+    resetHistory(key, greeting);
+    renderMessages(messagesContainer, conversation, {});
   });
 }
