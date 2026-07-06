@@ -23,6 +23,7 @@ Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 - [Stack y arquitectura](#stack-y-arquitectura)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Correrlo en local](#correrlo-en-local)
+- [Cómo consumir la API](#cómo-consumir-la-api)
 - [Tests](#tests)
 - [Deploy](#deploy)
 - [Funcionalidades](#funcionalidades)
@@ -76,7 +77,9 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 │   ├── utils.js          # funciones puras (escapeHtml, createMessage)
 │   └── views/            # home.js, chatbox.js, about.js, notFound.js
 ├── api/
-│   └── functions.js      # serverless function: proxy hacia Gemini
+│   ├── functions.js      # serverless function: valida la petición HTTP
+│   └── services/
+│       └── geminiService.js  # arma el payload, llama a Gemini y parsea la respuesta
 ├── test/
 │   ├── utils.test.js
 │   └── app.test.js
@@ -109,6 +112,56 @@ vercel dev
 
 Importante: **no uses Live Server** (ni ningún servidor estático simple) para probar el routing — no sabe aplicar el rewrite de SPA que necesita esta app, y vas a ver errores "Cannot GET /..." al navegar o recargar. `vercel dev` sí respeta `vercel.json` y simula el comportamiento real de producción.
 
+## Cómo consumir la API
+
+El frontend nunca habla con Gemini directamente: le habla a nuestra propia Serverless Function (`api/functions.js`), que es la única que conoce la API key. Esto es lo que hay que mandarle y lo que devuelve.
+
+**Endpoint:** `POST /api/functions`
+
+**Body de la petición:**
+
+```json
+{
+  "character": "joy",
+  "messages": [
+    { "id": "...", "role": "user", "text": "Hola, ¿cómo estás?" },
+    { "id": "...", "role": "char", "text": "¡Hola! ✨ Me alegra muchísimo verte." },
+    { "id": "...", "role": "user", "text": "Me llamo Cande" }
+  ]
+}
+```
+
+- `character`: uno de `joy`, `anger`, `sadness`, `anxiety` — define qué *system prompt* (personalidad) se usa.
+- `messages`: el historial **completo** de la conversación hasta ese momento, no solo el último mensaje. Esto es clave: Gemini no guarda memoria entre peticiones por su cuenta (cada llamada a la API es independiente), así que si no mandáramos todo el historial, el personaje "olvidaría" todo lo hablado antes. Por eso `chat.js` guarda la conversación en memoria y se la reenvía entera en cada mensaje nuevo.
+
+**Respuesta exitosa (200):**
+
+```json
+{ "text": "¡Encantada, Cande! ✨ ¿En qué te puedo ayudar hoy?" }
+```
+
+**Respuestas de error:**
+
+| Status | Cuándo pasa |
+|---|---|
+| 400 | Falta el historial o el personaje no es válido |
+| 405 | Se llamó con un método distinto a `POST` |
+| 429 | Se superó el límite de peticiones por minuto del tier gratuito de Gemini |
+| 500 / 502 | Falta la API key configurada, o Gemini no pudo generar una respuesta |
+
+Ejemplo con `fetch` (así lo consume `chat.js`):
+
+```js
+const response = await fetch("/api/functions", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ character: "joy", messages: conversation }),
+});
+const data = await response.json();
+```
+
+**Cómo probar que el personaje "recuerda" la conversación:** entrá a cualquier chat, contale algo personal (por ejemplo "me llamo Cande" o "hoy rendí un examen"), seguí charlando un par de mensajes más, y después preguntale directamente por ese dato (por ejemplo "¿cómo me llamo?"). Si responde bien, es porque el historial completo se está mandando y usando correctamente en cada request — se puede confirmar además mirando el *payload* que se manda a Gemini en los logs de Vercel (`console.error` solo loguea errores, pero se puede agregar un `console.log(transcript)` temporal en `api/functions.js` para verlo).
+
 ## Tests
 
 ```bash
@@ -116,7 +169,12 @@ npm test          # corre todos los tests una vez
 npm run test:watch  # los re-corre en cada cambio
 ```
 
-Cubre: `escapeHtml` y `createMessage` (funciones utilitarias puras), `extractText` (parseo de la respuesta de la API de Gemini) y `errorInfoFor` (clasificación de errores para la tarjeta de error del chat).
+Son 11 tests en total, sobre las funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API, así que no hace falta mockear nada — reciben un dato y siempre devuelven el mismo resultado):
+
+- **`test/utils.test.js`** — `escapeHtml`: que escape los 5 caracteres especiales de HTML, que no modifique un texto sin caracteres especiales, y que convierta a string valores que no lo son (ej. un número). `createMessage`: que devuelva la forma `{ id, role, text }` correcta, y que nunca genere el mismo `id` dos veces.
+- **`test/app.test.js`** — `extractText` (el parseo de la respuesta cruda de Gemini): que extraiga bien el texto de una respuesta válida (incluyendo que recorte espacios en blanco), y que devuelva `""` en vez de romper si la respuesta viene sin el `step` esperado o directamente vacía. `errorInfoFor` (la clasificación de errores para la tarjeta de error del chat): que un status 429 se clasifique como `rate-limit`, cualquier otro status como `server`, y la ausencia de status (fetch que nunca llegó a responder) como `network`.
+
+No se testea la lógica que toca el DOM directamente (por ejemplo `renderMessages` o `initChat`) porque para eso haría falta simular un navegador (jsdom) y esas funciones no tienen lógica de negocio propia — solo llaman a las funciones de arriba y actualizan la pantalla.
 
 ## Deploy
 
