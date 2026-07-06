@@ -38,6 +38,7 @@ Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 Elegí inspirarme en *Intensamente* porque cada emoción tiene una personalidad muy marcada. Esto me permitió trabajar el diseño de prompts para que la inteligencia artificial no respondiera siempre igual, sino que reaccionara como lo haría cada personaje de la película. También me ayudo a poder marcar bien el diseño de cada uno de ellos, pudiendo elegir una paleta de colores para cada uno y así generar una interfaz bien marcada. 
 
 El objetivo fue construir una experiencia donde el usuario realmente sienta que está conversando con las emociones de Riley y no simplemente con un asistente virtual.
+
 ---
 
 ## Los personajes
