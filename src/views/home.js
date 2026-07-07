@@ -1,5 +1,7 @@
 // Vista de bienvenida: galería de emociones
 
+import { hasSavedConversation } from "../storage.js";
+
 const EMOTIONS = [
   { key: "joy", name: "Alegría", desc: "Encuentro un motivo para sonreír." },
   { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
@@ -13,6 +15,11 @@ let selectedKey = null;
 
 function cardTemplate({ key, name, desc }) {
   const isActive = key === selectedKey;
+  // Indicador visual de que ya existe una charla guardada con este
+  // personaje (persistida en localStorage, ver src/storage.js).
+  const savedBadge = hasSavedConversation(key)
+    ? `<span class="card__saved-badge">💬 Guardado</span>`
+    : "";
   return `
     <button
       type="button"
@@ -20,6 +27,7 @@ function cardTemplate({ key, name, desc }) {
       data-emotion="${key}"
       aria-pressed="${isActive}"
     >
+      ${savedBadge}
       <div class="card__media">
         <img src="/assets/img/${key}.png" alt="${name}" />
       </div>

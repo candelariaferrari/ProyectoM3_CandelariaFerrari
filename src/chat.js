@@ -3,25 +3,33 @@
 // scroll automático.
 
 import { escapeHtml, createMessage } from "./utils.js";
+import { loadConversation, saveConversation, clearConversation } from "./storage.js";
 
-// Historial en memoria por personaje. Vive solo mientras la pestaña esté abierta -si se recarga la página se pierde
+// Historial en memoria por personaje (caché de lo que hay en localStorage,
+// para no releerlo del storage en cada re-render dentro de la misma sesión).
 const conversations = new Map();
 
+// Si ya está en memoria, se usa tal cual. Si no, se intenta traer de
+// localStorage (charla de una sesión anterior); si tampoco hay nada
+// guardado, arranca de cero con el saludo del personaje.
 function getConversation(key, greeting) {
   if (!conversations.has(key)) {
-    conversations.set(key, [createMessage("char", greeting)]);
+    const saved = loadConversation(key);
+    conversations.set(key, saved && saved.length > 0 ? saved : [createMessage("char", greeting)]);
   }
   return conversations.get(key);
 }
 
-// Reinicia la charla de un personaje: borra todo lo hablado y la deja como
-// recién entrada (solo el saludo inicial). Muta el mismo array en vez de
-// reemplazarlo, para que initChat (que ya tiene una referencia a ese array
-// en sus listeners) vea el cambio sin tener que volver a conectar nada.
+// Reinicia la charla de un personaje: borra todo lo hablado (en memoria Y en
+// localStorage) y la deja como recién entrada (solo el saludo inicial). Muta
+// el mismo array en vez de reemplazarlo, para que initChat (que ya tiene una
+// referencia a ese array en sus listeners) vea el cambio sin tener que volver
+// a conectar nada.
 function resetHistory(key, greeting) {
   const conversation = getConversation(key, greeting);
   conversation.length = 0;
   conversation.push(createMessage("char", greeting));
+  clearConversation(key);
   return conversation;
 }
 
