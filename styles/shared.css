@@ -154,13 +154,14 @@
   box-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow);
 }
 
-/* Indicador de que ya hay una charla guardada con este personaje
-   (localStorage, ver src/storage.js) */
 .card__saved-badge {
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: var(--overlay-navy-50);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -172,6 +173,9 @@
   pointer-events: none;
 }
 
+.card__saved-badge svg {
+  flex-shrink: 0;
+}
 
 .card__media {
   flex: 1;

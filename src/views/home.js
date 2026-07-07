@@ -7,6 +7,8 @@ const ICON_SUN = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" st
 
 const ICON_MOON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
 
+const ICON_CHAT = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
+
 const EMOTIONS = [
   { key: "joy", name: "Alegría", desc: "Encuentro un motivo para sonreír." },
   { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
@@ -20,10 +22,9 @@ let selectedKey = null;
 
 function cardTemplate({ key, name, desc }) {
   const isActive = key === selectedKey;
-  // Indicador visual de que ya existe una charla guardada con este
-  // personaje (persistida en localStorage, ver src/storage.js).
+  // Indicador visual de que ya existe una charla guardada con este personaje (persistida en localStorage,).
   const savedBadge = hasSavedConversation(key)
-    ? `<span class="card__saved-badge">💬 Guardado</span>`
+    ? `<span class="card__saved-badge">${ICON_CHAT}Continuar</span>`
     : "";
   return `
     <button
