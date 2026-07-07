@@ -53,15 +53,14 @@ export function renderAbout() {
 
       <section class="about-card">
         <h3>¿De qué trata este proyecto?</h3>
-        <p>Este proyecto propone una experiencia de conversación inspirada en la película Intensamente.</p>
-        <p>
-          En lugar de hablar con una inteligencia artificial genérica, el usuario puede conversar
-          con distintas emociones, cada una con una personalidad única.
+        <p>Elegí inspirarme en <strong>Intensamente</strong> porque cada emoción tiene una personalidad muy marcada.</p>
+        <p>Esto me permitió trabajar el diseño de prompts para que la inteligencia artificial no respondiera
+         siempre igual, sino que reaccionara como lo haría cada personaje de la película. 
+         También me ayudo a poder marcar bien el diseño de cada uno de ellos, pudiendo elegir una paleta de colores para cada
+          uno y así generar una interfaz bien marcada. 
         </p>
         <p>
-          Cada personaje cuenta con un prompt diseñado especialmente para definir su forma de pensar,
-          expresarse y reaccionar, permitiendo que una misma pregunta reciba respuestas completamente
-          diferentes según la emoción elegida.
+          El objetivo fue construir una experiencia donde el usuario realmente sienta que está conversando con las emociones de Riley y no simplemente con un asistente virtual.</p>
         </p>
       </section>
 
@@ -99,8 +98,7 @@ export function renderAbout() {
   attachThemeToggle();
 }
 
-// Cambia el atributo data-theme directamente en el DOM. Los estilos claros
-// están colgados de "#About[data-theme=light]" (about.css y shared.css).
+// Cambia el atributo data-theme directamente en el DOM. Los estilos claros.
 function attachThemeToggle() {
   const aboutEl = document.getElementById("About");
   const btnTheme = document.getElementById("btnTheme");
