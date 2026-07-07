@@ -14,6 +14,7 @@ La idea no era crear un chatbot cualquiera, sino lograr que una misma pregunta r
 Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 
 **🔗 Demo en vivo:** https://proyecto-m3-candelaria-ferrari.vercel.app/
+
 ![Home](./assets/screenshots/presentacion.png)
 ---
 
