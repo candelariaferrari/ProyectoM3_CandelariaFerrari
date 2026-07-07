@@ -14,6 +14,7 @@ La idea no era crear un chatbot cualquiera, sino lograr que una misma pregunta r
 Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 
 **🔗 Demo en vivo:** https://proyecto-m3-candelaria-ferrari.vercel.app/
+
 ![Home](./assets/screenshots/presentacion.png)
 ---
 
@@ -217,12 +218,9 @@ Para deployarlo desde cero en tu propia cuenta:
 - Scroll automático.
 - Responsive (mobile, tablet y desktop).
 - API Key protegida mediante Vercel Functions.
-
-### Extra credits
-
-- **Persistencia con localStorage:** el historial de cada personaje se guarda en el navegador y se recupera al recargar la página (antes se perdía, ahora solo se pierde si tocás "Reiniciar", que también borra el localStorage). Las tarjetas de Home muestran una insignia "💬 Guardado" si ya tenés una charla guardada con ese personaje.
-- **Copiar respuesta:** cada respuesta del personaje tiene un botón para copiarla al portapapeles, con feedback visual (tilde) al copiar.
-- **Modo claro/oscuro:** toggle en el navbar de Home y About. Solo afecta esas dos vistas (fondo, textos, tarjetas de info) — la vista de Chat mantiene siempre los colores propios de cada personaje, que no son parte de un tema neutro claro/oscuro sino de la identidad visual de esa emoción.
+- Persistencia con localStorage.
+- Opcion de copiar respuesta .
+- Modo claro/oscuro.
 
 ## 📷 Capturas
 
@@ -232,12 +230,6 @@ Para deployarlo desde cero en tu propia cuenta:
 
 ---
 
-
----
-
-### Errors
-
-![Errors](./assets/screenshots/error.png)
 
 ## 🤖 Uso de IA como herramienta de desarrollo
 Durante el desarrollo utilicé Claude como herramienta de apoyo y pair-programming. En lugar de pedir código para copiar, lo usé para entender distintas alternativas de implementación, investigar documentación actualizada y comprender el porqué de cada decisión técnica antes de incorporarla al proyecto. 
