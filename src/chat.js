@@ -25,9 +25,38 @@ function resetHistory(key, greeting) {
   return conversation;
 }
 
+const ICON_COPY = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+
+const ICON_CHECK = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
 function messageBubbleHtml(message) {
   const roleClass = message.role === "user" ? "message--user" : "message--char";
-  return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)}</p></div>`;
+  // El botón de copiar solo tiene sentido en las respuestas del personaje.
+  const copyButton =
+    message.role === "user"
+      ? ""
+      : `<button type="button" class="btn-copy" aria-label="Copiar respuesta">${ICON_COPY}</button>`;
+  return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)}</p>${copyButton}</div>`;
+}
+
+// Copia el texto de una burbuja al portapapeles y da feedback visual breve
+// (tilde verde) en el mismo botón que se clickeó, antes de volver al ícono original.
+async function copyMessageText(button) {
+  const text = button.closest(".message")?.querySelector("p")?.textContent ?? "";
+  if (!text) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    const originalHtml = button.innerHTML;
+    button.innerHTML = ICON_CHECK;
+    button.classList.add("btn-copy--copied");
+    setTimeout(() => {
+      button.innerHTML = originalHtml;
+      button.classList.remove("btn-copy--copied");
+    }, 1500);
+  } catch (error) {
+    console.error("[chat] No se pudo copiar al portapapeles:", error);
+  }
 }
 
 function typingBubbleHtml() {
@@ -143,6 +172,7 @@ async function sendAndRender(key, conversation, messagesContainer, input, sendBu
   try {
     const reply = await requestReply(key, conversation);
     conversation.push(createMessage("char", reply));
+    saveConversation(key, conversation);
     renderMessages(messagesContainer, conversation, {});
   } catch (error) {
     console.error("[chat] Error pidiendo respuesta:", error);
@@ -178,12 +208,19 @@ export function initChat(key, greeting) {
     if (!text) return;
 
     conversation.push(createMessage("user", text));
+    saveConversation(key, conversation);
     input.value = "";
     sendAndRender(key, conversation, messagesContainer, input, sendButton);
   });
 
-  // El botón "Reintentar" se crea recién cuando hay un error
+  // El botón "Reintentar" se crea recién cuando hay un error; el de copiar
+  // vive en cada burbuja de respuesta del personaje.
   messagesContainer.addEventListener("click", (event) => {
+    const copyBtn = event.target.closest(".btn-copy");
+    if (copyBtn) {
+      copyMessageText(copyBtn);
+      return;
+    }
     if (event.target.closest(".btn-retry")) {
       sendAndRender(key, conversation, messagesContainer, input, sendButton);
     }

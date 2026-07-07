@@ -270,10 +270,40 @@
 }
 
 .message--char {
+  position: relative;
   align-self: flex-start;
   background: var(--bubble-char-bg);
   color: var(--bubble-char-text);
   border-bottom-left-radius: 4px;
+  padding-right: 2.1rem;
+}
+
+.btn-copy {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: currentColor;
+  opacity: 0.55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+}
+
+.btn-copy:hover {
+  opacity: 1;
+  background: var(--overlay-white-15);
+}
+
+.btn-copy--copied {
+  opacity: 1;
+  color: var(--status-online);
 }
 
 .message--user {
