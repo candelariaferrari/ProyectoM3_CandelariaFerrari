@@ -1,7 +1,5 @@
 // Información del proyecto y las emociones
 
-const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-
 const EMOTIONS = [
   { key: "joy", name: "Alegría", desc: "Encuentro un motivo para sonreír." },
   { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },

@@ -166,10 +166,6 @@
   -webkit-backdrop-filter: blur(4px);
 }
 
-.chat-header__back {
-  display: none;
-}
-
 .chat-header__avatar {
   width: 70px;
   height: 70px;
@@ -211,16 +207,6 @@
   background: var(--status-online);
   box-shadow: 0 0 8px var(--status-online);
   flex-shrink: 0;
-}
-
-.status-dot.offline {
-  background: var(--status-offline);
-  box-shadow: 0 0 8px var(--status-offline);
-}
-
-.status-dot.error {
-  background: var(--status-error);
-  box-shadow: 0 0 8px var(--status-error);
 }
 
 .btn-close,

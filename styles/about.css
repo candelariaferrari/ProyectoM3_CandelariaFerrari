@@ -12,41 +12,6 @@
   flex: 1;
 }
 
-.about-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-lg);
-}
-
-.about-nav__brand {
-  font-size: var(--f-badge);
-  letter-spacing: 0.2rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.btn-about-close {
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: var(--badge-bg);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  color: var(--text-primary-neutral);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-
-.btn-about-close:hover {
-  background: var(--overlay-white-15);
-}
-
 .about-card {
   background: var(--overlay-white-10);
   border-radius: 16px;
