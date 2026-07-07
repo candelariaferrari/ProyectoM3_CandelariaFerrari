@@ -40,12 +40,22 @@ export function navigateTo(path) {
   router();
 }
 
+// "/" y "/home" son la misma vista (Home), y cualquier "/chat/algo" cuenta
+// como el link "/chat" activo, aunque el link en sí no tenga la emoción en
+// la URL. Por eso no alcanza con comparar el href tal cual contra la URL
+// actual.
+function isLinkActive(href, currentPath) {
+  if (href === "/home") return currentPath === "/" || currentPath === "/home";
+  if (href === "/chat") return currentPath.startsWith("/chat");
+  return href === currentPath;
+}
+
 // Resalta con .active el link de navegación que corresponda a la ruta actual
 function updateActiveLink() {
   const current = window.location.pathname;
   document.querySelectorAll(".navbar__links a").forEach((link) => {
     const href = link.getAttribute("href");
     if (!href || href.startsWith("http")) return;
-    link.classList.toggle("active", href === current);
+    link.classList.toggle("active", isLinkActive(href, current));
   });
 }

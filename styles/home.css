@@ -52,6 +52,22 @@
   box-shadow: 0 4px 14px var(--glow-accent-25);
 }
 
+/* Estado antes de elegir una emoción: sin href, no navega ni recibe foco,
+   y visualmente se ve apagado para que quede claro que hay que elegir
+   una tarjeta primero. */
+.btn-chat--disabled {
+  opacity: 0.55;
+  cursor: default;
+  box-shadow: none;
+}
+
+.btn-chat--disabled:hover,
+.btn-chat--disabled:active {
+  filter: none;
+  transform: none;
+  box-shadow: none;
+}
+
 /* =============================================================
      MEDIA QUERIES — Home
      ============================================================= */

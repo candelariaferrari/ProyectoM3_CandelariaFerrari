@@ -273,7 +273,7 @@ body:has(#chatbox),
     --f-subtitle: 1.05rem;
     --f-badge: 0.75rem;
     --f-name: 1.1rem;
-    --f-desc: 0.95rem;
+    --f-desc: 0.9rem;
     --grid-gap: 1.5rem;
     --content-max-width: 620px;
   }
@@ -285,7 +285,6 @@ body:has(#chatbox),
     --f-subtitle: 1.15rem;
     --f-badge: 0.8125rem;
     --f-name: 1.25rem;
-    --f-desc: 1rem;
     --grid-gap: 2rem;
     --content-max-width: 920px;
   }

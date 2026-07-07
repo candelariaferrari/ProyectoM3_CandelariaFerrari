@@ -141,11 +141,7 @@ Ansiedad:
 `,
 };
 
-// Tope de mensajes que se mandan como contexto en cada request. Sin esto, una
-// charla muy larga mandaría el historial entero (y cada vez más grande) en
-// cada mensaje nuevo, gastando de más tokens del tier gratuito. Se queda con
-// los últimos N mensajes: suficiente para que el personaje mantenga contexto
-// reciente, sin que la conversación crezca sin límite.
+// Tope de mensajes que se mandan como contexto en cada request. 
 const MAX_HISTORY_MESSAGES = 20;
 
 function getTrimmedHistory(messages) {

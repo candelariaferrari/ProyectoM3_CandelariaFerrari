@@ -3,9 +3,9 @@
 const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
 const EMOTIONS = [
-  { key: "joy", name: "Alegría", desc: "Siempre encuentro un motivo para sonreír." },
+  { key: "joy", name: "Alegría", desc: "Encuentro un motivo para sonreír." },
   { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
-  { key: "anxiety", name: "Ansiedad", desc: "Siempre imagino todos los escenarios posibles." },
+  { key: "anxiety", name: "Ansiedad", desc: "Imagino todos los escenarios posibles." },
   { key: "sadness", name: "Tristeza", desc: "No hace falta estar bien todo el tiempo." },
 ];
 
@@ -29,13 +29,15 @@ export function renderAbout() {
 
   app.innerHTML = `
     <div id="About">
-      <nav class="about-nav">
-         <p class="header__movie">Intensamente</p>
-        <a class="btn-about-close" href="/home" aria-label="Volver a home">
-          ${ICON_CLOSE}
-        </a>
+       <nav class="container-navbar">
+        <p class="header__movie">Intensamente</p>
+        <span class="navbar__links">
+          <a class="btn-about" href="/home">Home</a>
+          <a class="btn-about" href="/chat">Chat</a>
+          <a class="btn-about" href="/about">About</a>
+        </span>
       </nav>
-
+     
       <div class="container-header">
         <h1 class="header__title">Chat con tus <span>EMOCIONES</span></h1>
         <p class="header__subtitle">Cada emoción tiene una forma distinta de ver el mismo momento.</p>
@@ -73,11 +75,15 @@ export function renderAbout() {
         </ul>
       </section>
 
-      <p class="about-quote">"No existen emociones buenas o malas. Son solo emociones."</p>
+      <p class="about-quote">"Es curioso... hice la misma pregunta una y otra vez. 
+      Lo único que cambió fue la emoción que decidió responder, tal vez ninguna sea buena o mala. Simplemente, son emociones. "</p>
 
       <footer class="footer">
-        <a>@candeferrari</a>
-        <a class="btn-about" href="/home">Home</a>
+       <span class="footer__links">
+        <a class="link-footer" href="https://github.com/candelariaferrari?tab=repositories" target="_blank" rel="noopener noreferrer">Github</a>
+        <a class="link-footer" href="https://www.linkedin.com/in/TU-USUARIO-AQUI" target="_blank" rel="noopener noreferrer">Linkedin</a>
+      </span>
+        <a href="https://github.com/candelariaferrari?tab=repositories" target="_blank" rel="noopener noreferrer">© 2026 - Creado por @candeferrari</a>
       </footer>
     </div>
   `;

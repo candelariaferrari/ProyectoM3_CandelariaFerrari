@@ -247,6 +247,24 @@
   gap: var(--space-sm);
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
+  /* Firefox: track transparente, thumb del color de acento del personaje
+     activo (--accent lo define cada tema .joy/.anger/.sadness/.anxiety en
+     base.css, y se hereda hasta acá). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 999px;
 }
 
 .message {
