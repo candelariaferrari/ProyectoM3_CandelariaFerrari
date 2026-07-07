@@ -74,6 +74,8 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 │   ├── router.js         # matching de rutas + history API
 │   ├── navigation.js     # intercepta clicks en <a> para navegar sin recargar
 │   ├── chat.js           # toda la lógica del chat: estado del chat, fetch a /api/functions, errores
+│   ├── storage.js        # persistencia del historial en localStorage
+│   ├── theme.js          # preferencia de modo claro/oscuro (Home/About)
 │   ├── utils.js          # funciones puras (escapeHtml, createMessage) reutilizables
 │   └── views/            # una función por pantalla, arma el HTML de cada una: home.js, chatbox.js, about.js, notFound.js
 ├── api/
@@ -203,15 +205,24 @@ Para deployarlo desde cero en tu propia cuenta:
 ## ✨ Funcionalidades
 
 - Navegación SPA sin recargar la página.
+- Navbar con indicador de la página activa (Home / Chat / About), responsive.
 - Chat con cuatro emociones diferentes.
 - Cada personaje tiene su propio system prompt.
 - Historial independiente para cada emoción durante la sesión (recortado a los últimos 20 mensajes al mandarlo a Gemini).
 - Botón para reiniciar la conversación con un personaje.
+- Los "dots" para cambiar de personaje muestran primero al que está activo, con diferenciación visual clara.
+- Scroll del chat estilizado con el color de acento de cada personaje.
 - Indicador de "escribiendo...".
 - Manejo de errores de la API, con cooldown para evitar el rate-limit del tier gratuito.
 - Scroll automático.
 - Responsive (mobile, tablet y desktop).
 - API Key protegida mediante Vercel Functions.
+
+### Extra credits
+
+- **Persistencia con localStorage:** el historial de cada personaje se guarda en el navegador y se recupera al recargar la página (antes se perdía, ahora solo se pierde si tocás "Reiniciar", que también borra el localStorage). Las tarjetas de Home muestran una insignia "💬 Guardado" si ya tenés una charla guardada con ese personaje.
+- **Copiar respuesta:** cada respuesta del personaje tiene un botón para copiarla al portapapeles, con feedback visual (tilde) al copiar.
+- **Modo claro/oscuro:** toggle en el navbar de Home y About. Solo afecta esas dos vistas (fondo, textos, tarjetas de info) — la vista de Chat mantiene siempre los colores propios de cada personaje, que no son parte de un tema neutro claro/oscuro sino de la identidad visual de esa emoción.
 
 ## 📷 Capturas
 
@@ -246,6 +257,8 @@ Algunas decisiones concretas que salieron de ese proceso:
 - **System prompts de los personajes:** partimos de una versión base y los fui iterando a mano (agregando ejemplos de diálogo, ajustando el tono de cada uno) hasta que las respuestas sonaban realmente como cada personaje.
 - **Debugging de CSS:** un bug de scroll (la página entera scrolleaba en vez de quedar contenido dentro del chat) llevó varias iteraciones — terminó siendo un problema real de Flexbox (`min-height` vs `height` fija, y falta de `overflow: hidden` en el punto justo de la cadena de contenedores).
 - **Tests:** me ayudó a identificar qué funciones eran las más importantes de testear (las puras: `escapeHtml`, `createMessage`, el parseo de la respuesta de la API) y por qué esas y no la lógica que toca el DOM directamente.
+- **Decisiones de UX/UI:** en varias mejoras de interfaz (por ejemplo, cómo resolver el navbar en mobile sin agregar un menú hamburguesa innecesario para solo 3 links, o cómo diferenciar visualmente qué personaje está activo) discutí con la IA distintas alternativas y sus tradeoffs antes de elegir una, en vez de pedir directamente una solución armada.
+
 
 ---
 
