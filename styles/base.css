@@ -102,7 +102,7 @@ a {
   --f-small: 0.8rem;
   --f-medium: 0.9rem;
   --f-large: 1rem;
-  --f-xlarge:1.2rem;
+  --f-xlarge: 1.2rem;
 
   /* ── Cards / grid ── */
   --card-radius: 16px;
@@ -119,6 +119,16 @@ a {
   --error-network: #616161;
   --error-server: #d32f2f;
   --error-rate-limit: #f57c00;
+
+  /* ── Tema claro (Home/About) ── */
+  --bg-light-top: rgba(255, 255, 255, 0.94);
+  --bg-light-bottom: rgba(238, 240, 251, 0.94);
+  --text-primary-light: #22252f;
+  --text-secondary-light: #5b5f72;
+  --card-bg-light: #ffffff;
+  --border-light: rgba(0, 0, 0, 0.1);
+  --overlay-light-05: rgba(0, 0, 0, 0.05);
+  --shadow-light-08: rgba(0, 0, 0, 0.08);
 }
 
 /* ── ALEGRÍA ── */
@@ -248,6 +258,20 @@ body:has(#chatbox),
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
+}
+body[data-theme="light"] {
+  background: radial-gradient(circle at 12% -10%, rgba(108, 99, 255, 0.14), transparent 45%),
+    radial-gradient(circle at 88% 108%, rgba(255, 109, 0, 0.1), transparent 50%),
+    linear-gradient(180deg, var(--bg-light-top) 0%, var(--bg-light-bottom) 100%);
+  color: var(--text-primary-light);
+}
+
+body[data-theme="light"]::before {
+  opacity: 0.15;
+}
+
+body[data-theme="light"]::after {
+  opacity: 0.08;
 }
 
 /* =============================================================

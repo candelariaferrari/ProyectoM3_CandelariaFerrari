@@ -148,3 +148,4 @@ export function renderChat(emotionParam) {
 
   initChat(key, data.greeting);
 }
+

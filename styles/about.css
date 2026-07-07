@@ -12,30 +12,28 @@
   flex: 1;
 }
 
-/* Modo claro: mismo criterio que #home (ver la nota en shared.css). */
+/* Modo claro */
 #About[data-theme="light"] {
-  background: #f7f6f2;
-  color: #22252f;
+  color: var(--text-primary-light);
 }
-
-#About[data-theme="light"] .about-card {
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+#About[data-theme="light"] .about-card  {
+  color: var(--text-secondary-light);
+  border:1px solid var(--border-light);
 }
-
-#About[data-theme="light"] .about-card p {
-  color: #5b5f72;
-}
+/* #About[data-theme="light"] .about-card p {
+  color: var(--text-secondary-light);
+  border:1px solid var(--border-light);
+} */
 
 #About[data-theme="light"] .tech-list li {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
-  color: #22252f;
+  background: var(--overlay-light-05);
+  border-color: var(--border-light);
+  color: var(--text-primary-light);
 }
 
 #About[data-theme="light"] .about-quote {
-  border-top-color: rgba(0, 0, 0, 0.1);
-  border-bottom-color: rgba(0, 0, 0, 0.1);
+  border-top-color: var(--border-light);
+  border-bottom-color: var(--border-light);
 }
 
 .about-card {
@@ -66,13 +64,6 @@
   margin: var(--space-xl) 0;
 }
 
-/* ">" (hijo directo) en vez de descendiente: el título de la sección
-   ("Conocé las emociones") es hijo directo de .about-section, pero los <h3>
-   de cada tarjeta de emoción están varios niveles más adentro
-   (.container-cards--about > .card > .card__info > h3). Con el selector
-   descendiente de antes, esta regla también les pisaba el estilo a esos
-   h3 de las tarjetas (les agregaba un margin-bottom que .card__info no
-   esperaba, rompiendo el layout compacto que sí se ve bien en Home). */
 .about-section > h3 {
   font-family: var(--font-display), sans-serif;
   font-weight: 800;

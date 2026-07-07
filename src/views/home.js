@@ -95,9 +95,8 @@ export function renderHome() {
   attachThemeToggle();
 }
 
-// Cambia el atributo data-theme directamente en el DOM (sin re-renderizar
-// toda la vista) para no perder la tarjeta seleccionada. Los estilos claros
-// están en shared.css/home.css, todos colgados de "#home[data-theme=light]".
+// Cambia el atributo data-theme directamente en el DOM para no perder la tarjeta seleccionada. 
+
 function attachThemeToggle() {
   const homeEl = document.getElementById("home");
   const btnTheme = document.getElementById("btnTheme");

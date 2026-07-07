@@ -488,3 +488,8 @@
     height: 55px;
   }
 }
+
+body[data-theme="light"] .chatbox__title,
+body[data-theme="light"] .chatbox__subtitle {
+  color: var(--text-primary-light);
+}

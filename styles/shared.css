@@ -1,7 +1,7 @@
 /* =============================================================
    Piezas reutilizadas por más de una vista:
    header/badge, sistema de cards (Home + About las usan),
-   footer, loading y error.
+   footer y error. theme
    ============================================================= */
 
 /* -- Navbar --*/
@@ -311,27 +311,23 @@
 }
 
 /* =============================================================
-     MODO CLARO (solo Home y About)
-     El chat no participa de este toggle: sus colores son de cada
-     personaje (bg-top/bg-bottom/accent en base.css), no "chrome" neutro.
-     Por eso estas reglas cuelgan de "#home"/"#About" con data-theme="light"
-     en vez de tocar variables globales que también usa chatbox.css.
+     MODO CLARO 
      ============================================================= */
 #home[data-theme="light"] .header__title,
 #About[data-theme="light"] .header__title {
-  color: #22252f;
+  color: var(--text-primary-light);
 }
 
 #home[data-theme="light"] .header__movie,
 #About[data-theme="light"] .header__movie {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
-  color: #5b5f72;
+  background: var(--overlay-light-05);
+  border-color: var(--border-light);
+  color: var(--text-secondary-light);
 }
 
 #home[data-theme="light"] .footer,
 #About[data-theme="light"] .footer {
-  color: #5b5f72;
+  color: var(--text-secondary-light);
 }
 
 .btn-about {

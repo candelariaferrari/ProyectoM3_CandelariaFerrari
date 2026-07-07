@@ -4,6 +4,15 @@
 // para que la elección se mantenga entre visitas.
 
 const THEME_KEY = "chat-emociones:theme";
+export function applyBodyTheme() {
+  try {
+    document.body.dataset.theme = getTheme();
+  } catch (error) {
+    console.error("[theme] No se pudo aplicar el tema al body:", error);
+  }
+}
+
+
 
 export function getTheme() {
   try {
@@ -26,5 +35,6 @@ function setTheme(theme) {
 export function toggleTheme() {
   const next = getTheme() === "light" ? "dark" : "light";
   setTheme(next);
+  document.body.dataset.theme = next;
   return next;
 }
