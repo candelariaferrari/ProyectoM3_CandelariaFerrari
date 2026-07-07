@@ -119,10 +119,10 @@ export function renderChat(emotionParam) {
               <h2 class="chat-header__name">${data.name}</h2>
               <p class="chat-header__status"><span class="status-dot"></span>${data.status}</p>
             </div>
-            <button type="button" class="btn-reset" id="btnResetChat" aria-label="Reiniciar conversación">
+            <button type="button" class="btn-reset" id="btnResetChat" aria-label="Reiniciar chat" data-tooltip="Reiniciar chat">
               ${ICON_RESET}
             </button>
-            <a class="btn-close" href="/home" aria-label="Cerrar chat">
+            <a class="btn-close" href="/home" aria-label="Cerrar chat" data-tooltip="Cerrar chat">
               ${ICON_CLOSE}
             </a>
           </header>
