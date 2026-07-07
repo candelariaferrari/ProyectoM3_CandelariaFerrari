@@ -1,7 +1,7 @@
 // Vercel Serverless Function — proxy entre el frontend y la API de Gemini.
 
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/interactions";
-const MODEL = "gemini-3.5-flash";
+const MODEL = "gemini-3.1-flash-lite";
 
 // Un system prompt por personaje
 const SYSTEM_PROMPTS = {
