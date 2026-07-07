@@ -26,7 +26,12 @@
   font-size: var(--f-xlarge);
   color: var(--text-primary-neutral);
 }
-
+.chatbox__subtitle {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 400;
+  font-size: var(--f-large);
+  color: var(--text-primary-neutral);
+}
 
 .chatbox__dots {
   display: flex;
@@ -42,7 +47,9 @@
   cursor: pointer;
   display: block;
   overflow: hidden;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  opacity: 0.6;
+  transition: transform var(--transition-fast), border-color var(--transition-fast),
+    opacity var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 /* Color de fondo por si la imagen tarda en cargar o falla */
@@ -64,7 +71,10 @@
 }
 
 .emotion-dot.is-active {
+  opacity: 1;
   border-color: var(--white);
+  box-shadow: 0 0 0 3px var(--overlay-white-15);
+  transform: scale(1.1);
 }
 
 .chatbox__body {
@@ -247,15 +257,12 @@
   gap: var(--space-sm);
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  /* Firefox: track transparente, thumb del color de acento del personaje
-     activo (--accent lo define cada tema .joy/.anger/.sadness/.anxiety en
-     base.css, y se hereda hasta acá). */
   scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+  scrollbar-color: var(--scroll-color) transparent;
 }
 
 .chat-messages::-webkit-scrollbar {
-  width: 6px;
+  width: 12px;
 }
 
 .chat-messages::-webkit-scrollbar-track {
@@ -263,7 +270,7 @@
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-  background-color: var(--accent);
+  background-color: var(--scroll-color);
   border-radius: 999px;
 }
 
@@ -405,13 +412,6 @@
     max-width: 1230px;
     width: 90%;
     margin: 0 auto 2rem;
-    /* Antes: height: 90vh (un número fijo adivinado). El problema es que
-       .chatbox__topbar + este margen + 90vh podían sumar MÁS que el 100vh
-       real de la pantalla, y ese sobrante es lo que generaba el scroll de
-       toda la página. Con flex:1 (adentro de #app, que ahora es
-       height:100vh + overflow:hidden, ver base.css), #chatbox ocupa
-       automáticamente "todo lo que quede" después del topbar, sin importar
-       cuánto mida el topbar exactamente -nunca se puede pasar del viewport. */
     flex: 1;
     min-height: 0;
     border-radius: 24px;
@@ -426,13 +426,9 @@
     justify-content: space-between;
     padding: var(--space-md) var(--space-xl) var(--space-xs);
     background: transparent;
-    /* Mismo ancho y max-width que #chatbox (90% con tope de 1230px). Antes
-       el topbar solo tenía width:90% sin max-width, así que en pantallas muy
-       grandes terminaba siendo más ancho que #chatbox (que sí topea en
-       1230px) y quedaban descentrados entre sí. */
     width: 90%;
     max-width: 1230px;
-    margin: 1rem auto 0rem;
+    margin: 1rem auto 0.5rem;
   }
 
   .content__dots {

@@ -72,7 +72,10 @@ const ICON_BACK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" s
 const ICON_RESET = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
 
 function dotsTemplate(activeKey) {
-  return ORDER.map((key) => {
+  // El personaje activo va primero, el resto mantiene el orden de siempre.
+  const orderedKeys = [activeKey, ...ORDER.filter((key) => key !== activeKey)];
+
+  return orderedKeys.map((key) => {
     const isActive = key === activeKey ? "is-active" : "";
     return `
       <a class="emotion-dot ${key} ${isActive}" href="/chat/${key}" aria-label="Chatear con ${EMOTIONS[key].name}">
@@ -95,7 +98,7 @@ export function renderChat(emotionParam) {
     <div class="chatbox__topbar">
       <h1 class="chatbox__title">Chat con tus <span>EMOCIONES</span></h1>
       <span class="content__dots">
-        <p class="header__subtitle">¿Con cuál querés hablar hoy?</p>
+        <p class="chatbox__subtitle">En el cuartel general: ${data.name} está al mando </p>
         <div class="chatbox__dots">${dotsTemplate(key)}</div>
       </span>
     </div>

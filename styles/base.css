@@ -90,6 +90,10 @@ a {
   --glow-gold-strong: rgba(255, 213, 79, 0.53);
   --glow-gold-soft: rgba(255, 213, 79, 0.2);
 
+  /* ── Scroll ── */
+  --scroll-color: #9aa5c1;
+
+
   /* ── Tipografía ── */
   --font-display: "Nunito", sans-serif;
   --font-body: "Inter", sans-serif;
@@ -148,6 +152,7 @@ a {
   --bubble-user-bg: #7b3f00;
   --bubble-user-text: #ffffff;
   --glow: rgba(255, 214, 64, 0.4);
+  --scroll-color: #904b00;
 }
 
 /* ── FURIA ── */
@@ -164,6 +169,7 @@ a {
   --bubble-user-bg: #ff5252;
   --bubble-user-text: #ffffff;
   --glow: rgba(255, 82, 82, 0.4);
+  --scroll-color: #ff8a80;
 }
 
 /* ── TRISTEZA ── */
@@ -180,6 +186,7 @@ a {
   --bubble-user-bg: #90caf9;
   --bubble-user-text: #0a1e3a;
   --glow: rgba(144, 202, 249, 0.3);
+  --scroll-color: #4F8FE8;
 }
 
 /* ── ANSIEDAD ── */
@@ -196,6 +203,7 @@ a {
   --bubble-user-bg: #ffab76;
   --bubble-user-text: #3a1500;
   --glow: rgba(255, 138, 101, 0.4);
+  --scroll-color: #FF7A00;
 }
 
 body {
@@ -250,8 +258,7 @@ body::after {
   width: 100%;
 }
 
-/* Segunda barrera de contención para la vista de Chat, en TODAS las
-   pantallas (no solo desktop). #chatbox ya tiene su propio height fijo +
+/* Segunda barrera de contención para la vista de Chat #chatbox ya tiene su propio height fijo +
    overflow:hidden, pero por las dudas -sea por redondeo, por cómo cada
    navegador calcula flexbox, o por el comportamiento elástico de Safari en
    iOS- si algo igual se desborda un pixel, que no se note: forzamos que
