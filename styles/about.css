@@ -12,6 +12,32 @@
   flex: 1;
 }
 
+/* Modo claro: mismo criterio que #home (ver la nota en shared.css). */
+#About[data-theme="light"] {
+  background: #f7f6f2;
+  color: #22252f;
+}
+
+#About[data-theme="light"] .about-card {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+#About[data-theme="light"] .about-card p {
+  color: #5b5f72;
+}
+
+#About[data-theme="light"] .tech-list li {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #22252f;
+}
+
+#About[data-theme="light"] .about-quote {
+  border-top-color: rgba(0, 0, 0, 0.1);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
 .about-card {
   background: var(--overlay-white-10);
   border-radius: 16px;

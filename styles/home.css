@@ -14,6 +14,14 @@
   flex: 1;
 }
 
+/* Modo claro: pinta su propio fondo claro por encima del fondo oscuro del
+   body (que sigue igual) — así esta vista se ve clara sin tocar nada fuera
+   de "#home". Ver la nota completa en shared.css. */
+#home[data-theme="light"] {
+  background: #f7f6f2;
+  color: #22252f;
+}
+
 .btn-chat {
   display: flex;
   align-items: center;
