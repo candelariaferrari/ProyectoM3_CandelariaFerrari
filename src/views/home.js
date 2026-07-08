@@ -1,21 +1,11 @@
 // Vista de bienvenida: galería de emociones
 
 import { hasSavedConversation } from "../storage.js";
-import { getTheme, toggleTheme } from "../theme.js";
-
-const ICON_SUN = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
-
-const ICON_MOON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-
+import { getTheme } from "../theme.js";
+import { navbarTemplate, footerTemplate, attachThemeToggle } from "./shared.js";
+import { EMOTIONS, EMOTION_ORDER } from "../emotions.js";
+/* icon */
 const ICON_CHAT = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
-
-const EMOTIONS = [
-  { key: "joy", name: "Alegría", desc: "Encuentro un motivo para sonreír." },
-  { key: "anger", name: "Furia", desc: "A veces hace falta hacerse escuchar." },
-  { key: "anxiety", name: "Ansiedad", desc: "Imagino todos los escenarios posibles." },
-  { key: "sadness", name: "Tristeza", desc: "No hace falta estar bien todo el tiempo." },
-];
-
 
 // Arranca sin ninguna emoción seleccionada: el usuario tiene que elegir una tarjeta antes de poder chatear.
 let selectedKey = null;
@@ -57,22 +47,12 @@ function btnChatTemplate(key) {
 // Pinta toda la vista de Home y conecta sus listeners (selección de tarjeta y toggle de tema).
 export function renderHome() {
   const app = document.getElementById("app");
-  const cards = EMOTIONS.map(cardTemplate).join("");
+  const cards = EMOTION_ORDER.map((key) => cardTemplate({ key, ...EMOTIONS[key] })).join("");
   const theme = getTheme();
 
   app.innerHTML = `
     <div id="home" data-theme="${theme}">
-      <nav class="container-navbar">
-        <p class="header__movie">Intensamente</p>
-        <span class="navbar__links">
-          <a class="btn-about" href="/home">Home</a>
-          <a class="btn-about" href="/chat">Chat</a>
-          <a class="btn-about" href="/about">About</a>
-          <button type="button" class="btn-theme" id="btnTheme" aria-label="Cambiar a modo ${theme === "light" ? "oscuro" : "claro"}">
-            ${theme === "light" ? ICON_MOON : ICON_SUN}
-          </button>
-        </span>
-      </nav>
+      ${navbarTemplate(theme)}
       <div class="container-header">
         <h1 class="header__title">Chat con tus <span>EMOCIONES</span></h1>
         <p class="header__subtitle">¿Con cuál querés hablar hoy?</p>
@@ -84,32 +64,12 @@ export function renderHome() {
 
       ${btnChatTemplate(selectedKey)}
 
-     <footer class="footer">
-       <span class="footer__links">
-        <a class="link-footer" href="https://github.com/candelariaferrari?tab=repositories" target="_blank" rel="noopener noreferrer">Github</a>
-        <a class="link-footer" href="https://www.linkedin.com/in/TU-USUARIO-AQUI" target="_blank" rel="noopener noreferrer">Linkedin</a>
-      </span>
-        <a href="https://github.com/candelariaferrari?tab=repositories" target="_blank" rel="noopener noreferrer">© 2026 - Creado por @candeferrari</a>
-      </footer>
+    ${footerTemplate()}
     </div>
   `;
 
   attachCardSelection();
-  attachThemeToggle();
-}
-
-// Cambia el atributo data-theme directamente en el DOM para no perder la tarjeta seleccionada. 
-
-function attachThemeToggle() {
-  const homeEl = document.getElementById("home");
-  const btnTheme = document.getElementById("btnTheme");
-
-  btnTheme?.addEventListener("click", () => {
-    const newTheme = toggleTheme();
-    homeEl.setAttribute("data-theme", newTheme);
-    btnTheme.innerHTML = newTheme === "light" ? ICON_MOON : ICON_SUN;
-    btnTheme.setAttribute("aria-label", `Cambiar a modo ${newTheme === "light" ? "oscuro" : "claro"}`);
-  });
+  attachThemeToggle("home");
 }
 
 // Escucha el click en cada tarjeta para marcarla como activa y habilitar el botón "Charlemos".

@@ -2,67 +2,9 @@
 // La emoción llega como parámetro de la URL (/chat/:emotion), capturado por el router.
 
 import { initChat } from "../chat.js";
+import { EMOTIONS, EMOTION_ORDER } from "../emotions.js";
 
-export const EMOTIONS = {
-  joy: {
-    name: "Alegría",
-    status: "En línea · lista para alegrarte el día",
-    tagline: "Siempre encuentro un motivo para sonreír.",
-    helps: [
-      "Encontrar lo positivo",
-      "Recuperar el ánimo",
-      "Celebrar tus logros",
-      "Motivarte"
-    ],
-    greeting: "¡Hola! ✨ Me alegra muchísimo verte. ¿Qué hacemos hoy?",
-    phrase: "Hasta los días grises esconden un rayito de sol. ☀️"
-  },
-
-  anger: {
-    name: "Furia",
-    status: "En línea · sin vueltas",
-    tagline: "A veces hace falta hacerse escuchar.",
-    helps: [
-      "Poner límites",
-      "Expresar lo que sentís",
-      "Resolver conflictos",
-      "Defender tu postura"
-    ],
-    greeting: "Bueno... decime qué pasó. 🔥",
-    phrase: "Quedarse callado no siempre es la mejor opción."
-  },
-
-  sadness: {
-    name: "Tristeza",
-    status: "En línea · acá para acompañarte",
-    tagline: "No hace falta estar bien todo el tiempo.",
-    helps: [
-      "Hablar de lo que sentís",
-      "Encontrar contención",
-      "Procesar emociones",
-      "Tomarte un respiro"
-    ],
-    greeting: "Hola... 💙 Estoy acá para escucharte.",
-    phrase: "A veces, sentir también es una forma de avanzar."
-  },
-
-  anxiety: {
-    name: "Ansiedad",
-    status: "En línea · pensando un paso adelante",
-    tagline: "Siempre imagino todos los escenarios posibles.",
-    helps: [
-      "Organizar ideas",
-      "Prepararte para desafíos",
-      "Reducir la incertidumbre",
-      "Ordenar tus pendientes"
-    ],
-    greeting: "¡Esperá! 😰 Contame bien qué está pasando.",
-    phrase: "Respiremos primero... después resolvemos lo demás."
-  }
-};
-
-const ORDER = ["joy", "anger", "sadness", "anxiety"];
-
+/* icons */
 const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
 const ICON_SEND = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>`;
@@ -71,7 +13,7 @@ const ICON_RESET = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" 
 
 function dotsTemplate(activeKey) {
   // El personaje activo va primero, el resto mantiene el orden de siempre.
-  const orderedKeys = [activeKey, ...ORDER.filter((key) => key !== activeKey)];
+  const orderedKeys = [activeKey, ...EMOTION_ORDER.filter((key) => key !== activeKey)];
 
   return orderedKeys.map((key) => {
     const isActive = key === activeKey ? "is-active" : "";
@@ -87,7 +29,7 @@ function dotsTemplate(activeKey) {
  * @param {string|null} emotionParam - capturado de la URL /chat/:emotion por el router
  */
 export function renderChat(emotionParam) {
-  const key = ORDER.includes(emotionParam) ? emotionParam : "joy";
+  const key = EMOTION_ORDER.includes(emotionParam) ? emotionParam : "joy";
   const data = EMOTIONS[key];
   const helps = data.helps.map((h) => `<li>${h}</li>`).join(""); 
   const app = document.getElementById("app");
@@ -106,7 +48,7 @@ export function renderChat(emotionParam) {
         <aside class="chat-sidebar">
           <img class="chat-sidebar__avatar" src="/assets/img/${key}.png" alt="${data.name}" />
           <h2 class="chat-sidebar__name">${data.name}</h2>
-          <p class="chat-sidebar__tagline">${data.tagline}</p>
+          <p class="chat-sidebar__tagline">${data.desc}</p>
           <p class="chat-sidebar__label">Puedo ayudarte con:</p>
           <ul class="chat-sidebar__list">${helps}</ul>
           <p class="chat-sidebar__phrase"> ${data.phrase}</p>
