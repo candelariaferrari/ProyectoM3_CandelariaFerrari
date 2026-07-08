@@ -28,6 +28,7 @@ Proyecto Integrador 3 — Soy Henry, Módulo 3 (Fullstack).
 - [Tests](#tests)
 - [Deploy](#deploy)
 - [Funcionalidades](#funcionalidades)
+- [Demo](#-demo)
 - [Capturas](#capturas)
 - [Uso de IA en el desarrollo](#uso-de-ia-como-herramienta-de-desarrollo)
 - [Sobre este proyecto](#sobre-este-proyecto)
@@ -77,13 +78,15 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 │   ├── chat.js           # toda la lógica del chat: estado del chat, fetch a /api/functions, errores
 │   ├── storage.js        # persistencia del historial en localStorage
 │   ├── theme.js          # preferencia de modo claro/oscuro (Home/About)
+│   ├── emotions.js       # datos centralizados de las 4 emociones (nombre, descripción, prompts de ayuda, saludo, frase)
 │   ├── utils.js          # funciones puras (escapeHtml, createMessage) reutilizables
-│   └── views/            # una función por pantalla, arma el HTML de cada una: home.js, chatbox.js, about.js, notFound.js
+│   └── views/            # una función por pantalla: home.js, chatbox.js, about.js, notFound.js, y shared.js (navbar/footer/toggle de tema compartidos por Home y About)
 ├── api/
 │   ├── functions.js      # habla con Gemini sin exponer API key, serverless function: valida la petición HTTP
 ├── test/.                # los tests automáticos (Vitest)
 │   ├── utils.test.js
-│   └── app.test.js
+│   ├── app.test.js
+│   └── storage.test.js
 ├── vercel.json           # configuración para que Vercel sirva bien la SPA, rewrites (SPA fallback + /api passthrough)
 └── vitest.config.js.     # configuración de los tests
 ```
@@ -231,6 +234,18 @@ Para deployarlo desde cero en tu propia cuenta:
 - Copiar respuesta a portapapeles
 - Modo claro/oscuro
 
+## 🎬 Demo
+
+Por si al momento de la corrección la API de Gemini está saturada o se acabó la cuota gratuita del token, estos GIFs muestran el proyecto funcionando de punta a punta (navegación, chat con Gemini respondiendo, y modo claro/oscuro).
+
+**Desktop:**
+
+![Demo desktop](./assets/screenshots/demo-desktop.gif)
+
+**Mobile:**
+
+![Demo mobile](./assets/screenshots/demo-mobile.gif)
+
 ## 📷 Capturas
 
 ### Presentación de vistas
@@ -249,6 +264,7 @@ Algunas decisiones concretas que salieron de ese proceso:
 - **System prompts de los personajes:** partimos de una versión base y los fui iterando a mano (agregando ejemplos de diálogo, ajustando el tono de cada uno) hasta que las respuestas sonaban realmente como cada personaje.
 - **Debugging de CSS:** un bug de scroll (la página entera scrolleaba en vez de quedar contenido dentro del chat) llevó varias iteraciones — terminó siendo un problema real de Flexbox (`min-height` vs `height` fija, y falta de `overflow: hidden` en el punto justo de la cadena de contenedores).
 - **Tests:** me ayudó a identificar qué funciones eran las más importantes de testear (las puras: `escapeHtml`, `createMessage`, el parseo de la respuesta de la API) y por qué esas y no la lógica que toca el DOM directamente.
+- **Test de `storage.js` con mock:** como `localStorage` no existe en el entorno de test (Vitest corre en Node, no en un navegador), me explicó qué es mockear y me ayudó a armar un `localStorage` falso en memoria con `vi.fn()` y `vi.stubGlobal()`, para poder probar el guardado/lectura/borrado del historial y el manejo de errores (ej: modo privado) sin depender de un browser real.
 - **Decisiones de UX/UI:** en varias mejoras de interfaz (por ejemplo, cómo resolver el navbar en mobile sin agregar un menú hamburguesa innecesario para solo 3 links, o cómo diferenciar visualmente qué personaje está activo) discutí con la IA distintas alternativas y sus tradeoffs antes de elegir una, en vez de pedir directamente una solución armada.
 - **Persistencia con localStorage:** me ayudó a pensar el diseño antes de escribir código (por qué conviene mantener un `Map` en memoria como caché y no leer `localStorage` en cada render, cómo envolver las llamadas a `localStorage` en `try/catch` para que no rompan la app en modo privado o si el storage está lleno/deshabilitado, y por qué mutar el array de la conversación en vez de reemplazarlo al reiniciar el chat).
 
