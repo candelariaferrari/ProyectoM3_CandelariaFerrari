@@ -144,6 +144,7 @@ Ansiedad:
 // Tope de mensajes que se mandan como contexto en cada request. 
 const MAX_HISTORY_MESSAGES = 20;
 
+// Se queda solo con los últimos MAX_HISTORY_MESSAGES mensajes, para no mandarle a Gemini un historial infinito.
 function getTrimmedHistory(messages) {
   return messages.slice(-MAX_HISTORY_MESSAGES);
 }
@@ -155,6 +156,7 @@ export function extractText(data) {
   return textBlock?.text?.trim() || "";
 }
 
+// Recibe el mensaje del frontend, arma el pedido a Gemini con el system prompt del personaje, y devuelve la respuesta (o el error correspondiente).
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido." });
@@ -177,7 +179,7 @@ export default async function handler(req, res) {
   }
 
   // historial recortado a los últimos MAX_HISTORY_MESSAGES, convertido de
-  // [{role, text}] (como lo guarda chat.js en memoria)
+  // [{role, text}]
   const transcript = getTrimmedHistory(messages)
     .map((m) => `${m.role === "user" ? "Usuario" : "Vos"}: ${m.text}`)
     .join("\n");

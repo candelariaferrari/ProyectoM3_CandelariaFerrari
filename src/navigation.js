@@ -1,5 +1,6 @@
 import { navigateTo } from "./router.js";
 
+//escucha los clicks de toda la pagina
 export function setupLinkInterception() {
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a");

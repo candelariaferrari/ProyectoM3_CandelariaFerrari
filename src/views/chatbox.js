@@ -89,7 +89,7 @@ function dotsTemplate(activeKey) {
 export function renderChat(emotionParam) {
   const key = ORDER.includes(emotionParam) ? emotionParam : "joy";
   const data = EMOTIONS[key];
-  const helps = data.helps.map((h) => `<li>${h}</li>`).join("");
+  const helps = data.helps.map((h) => `<li>${h}</li>`).join(""); 
   const app = document.getElementById("app");
 
   app.innerHTML = `

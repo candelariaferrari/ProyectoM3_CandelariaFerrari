@@ -13,6 +13,7 @@ const EMOTIONS = [
   { key: "sadness", name: "Tristeza", desc: "No hace falta estar bien todo el tiempo." },
 ];
 
+// Arma el HTML de una tarjeta de emoción para la sección "Conocé las emociones".
 function emotionCard({ key, name, desc }) {
   return `
     <a class="card ${key}" href="/chat/${key}">
@@ -27,6 +28,7 @@ function emotionCard({ key, name, desc }) {
   `;
 }
 
+// Pinta toda la vista de About y conecta el toggle de tema.
 export function renderAbout() {
   const app = document.getElementById("app");
   const cards = EMOTIONS.map(emotionCard).join("");

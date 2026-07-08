@@ -5,8 +5,7 @@
 import { escapeHtml, createMessage } from "./utils.js";
 import { loadConversation, saveConversation, clearConversation } from "./storage.js";
 
-// Historial en memoria por personaje (caché de lo que hay en localStorage,
-// para no releerlo del storage en cada re-render dentro de la misma sesión).
+// Historial en memoria por personaje (caché de lo que hay en localStorage)
 const conversations = new Map();
 
 // Si ya está en memoria, se usa tal cual. Si no, se intenta traer de
@@ -20,11 +19,7 @@ function getConversation(key, greeting) {
   return conversations.get(key);
 }
 
-// Reinicia la charla de un personaje: borra todo lo hablado (en memoria Y en
-// localStorage) y la deja como recién entrada (solo el saludo inicial). Muta
-// el mismo array en vez de reemplazarlo, para que initChat (que ya tiene una
-// referencia a ese array en sus listeners) vea el cambio sin tener que volver
-// a conectar nada.
+// Reinicia la charla de un personaje
 function resetHistory(key, greeting) {
   const conversation = getConversation(key, greeting);
   conversation.length = 0;
@@ -47,8 +42,7 @@ function messageBubbleHtml(message) {
   return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)}</p>${copyButton}</div>`;
 }
 
-// Copia el texto de una burbuja al portapapeles y da feedback visual breve
-// (tilde verde) en el mismo botón que se clickeó, antes de volver al ícono original.
+// Copia el texto de una burbuja al portapapeles.
 async function copyMessageText(button) {
   const text = button.closest(".message")?.querySelector("p")?.textContent ?? "";
   if (!text) return;
@@ -101,9 +95,7 @@ export function errorInfoFor(error) {
 
 // Cooldown después de cada respuesta: el tier gratuito de Gemini tiene un
 // límite de peticiones por minuto muy bajo, así que mandar mensajes muy
-// seguido dispara el error de rate-limit enseguida. En vez de solo mostrar
-// el error después de que pasa, prevenimos que pase deshabilitando el
-// composer unos segundos luego de cada respuesta (éxito o error).
+// seguido dispara el error de rate-limit enseguida.
 const SEND_COOLDOWN_MS = 4000;
 
 function setComposerDisabled(input, button, disabled) {
@@ -129,7 +121,7 @@ function startCooldown(input, button) {
   }, 1000);
 }
 
-function errorCardHtml(error) {
+function errorCardHtml(error) { //tarjeta de error
   const { variant, title, message } = errorInfoFor(error);
   return `
     <div class="error">
@@ -169,12 +161,10 @@ async function requestReply(key, conversation) {
   return data.text;
 }
 
-//  Manda el mensaje a Gemini y actualiza la UI según lo que pase. Se llama tanto al enviar un mensaje nuevo como al apretar "Reintentar".
+//  Manda el mensaje a Gemini y actualiza la UI según lo que pase. Se llama al enviar o Reintentar.
 async function sendAndRender(key, conversation, messagesContainer, input, sendButton) {
   renderMessages(messagesContainer, conversation, { isTyping: true });
-  // Deshabilitado también mientras se espera la respuesta (no solo después):
-  // sin esto, alcanzaba a mandar un segundo mensaje antes de que llegara el
-  // primero y se pisaban las respuestas.
+  // Deshabilitado también mientras se espera la respuesta
   setComposerDisabled(input, sendButton, true);
 
   try {

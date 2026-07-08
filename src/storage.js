@@ -4,6 +4,7 @@
 
 const STORAGE_PREFIX = "chat-emociones:history:";
 
+// Arma la clave completa de localStorage para un personaje.
 function storageKey(key) {
   return `${STORAGE_PREFIX}${key}`;
 }
@@ -21,6 +22,7 @@ export function loadConversation(key) {
   }
 }
 
+// Guarda la conversación completa de ese personaje en localStorage.
 export function saveConversation(key, conversation) {
   try {
     localStorage.setItem(storageKey(key), JSON.stringify(conversation));
@@ -29,6 +31,7 @@ export function saveConversation(key, conversation) {
   }
 }
 
+// Borra del localStorage la conversación guardada de ese personaje.
 export function clearConversation(key) {
   try {
     localStorage.removeItem(storageKey(key));

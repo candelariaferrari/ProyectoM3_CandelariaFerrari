@@ -4,6 +4,8 @@
 // para que la elección se mantenga entre visitas.
 
 const THEME_KEY = "chat-emociones:theme";
+
+// Aplica al body el tema guardado, para que ya se vea bien apenas carga la página.
 export function applyBodyTheme() {
   try {
     document.body.dataset.theme = getTheme();
@@ -14,6 +16,7 @@ export function applyBodyTheme() {
 
 
 
+// Devuelve el tema guardado ("light" o "dark"), o "dark" si no hay nada guardado todavía.
 export function getTheme() {
   try {
     return localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
@@ -23,6 +26,7 @@ export function getTheme() {
   }
 }
 
+// Guarda el tema elegido en localStorage.
 function setTheme(theme) {
   try {
     localStorage.setItem(THEME_KEY, theme);

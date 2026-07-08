@@ -20,6 +20,7 @@ const EMOTIONS = [
 // Arranca sin ninguna emoción seleccionada: el usuario tiene que elegir una tarjeta antes de poder chatear.
 let selectedKey = null;
 
+// Arma el HTML de una tarjeta de emoción para la galería de Home.
 function cardTemplate({ key, name, desc }) {
   const isActive = key === selectedKey;
   // Indicador visual de que ya existe una charla guardada con este personaje (persistida en localStorage,).
@@ -53,6 +54,7 @@ function btnChatTemplate(key) {
   return `<a class="btn-chat" id="btnChat" href="/chat/${key}">Charlemos</a>`;
 }
 
+// Pinta toda la vista de Home y conecta sus listeners (selección de tarjeta y toggle de tema).
 export function renderHome() {
   const app = document.getElementById("app");
   const cards = EMOTIONS.map(cardTemplate).join("");
@@ -110,6 +112,7 @@ function attachThemeToggle() {
   });
 }
 
+// Escucha el click en cada tarjeta para marcarla como activa y habilitar el botón "Charlemos".
 function attachCardSelection() {
   const cards = document.querySelectorAll(".container-cards .card");
   const btnChat = document.getElementById("btnChat");
