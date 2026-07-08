@@ -12,9 +12,14 @@ const routes = [
   { pattern: /^\/about$/, render: renderAbout },
 ];
 
-// para Live Server (y algunos hosts estáticos)
+// para Live Server (y algunos hosts estáticos), y para que una barra final
+// (ej: "/about/" o "/chat/joy/") no rompa el match contra los patrones de
+// arriba, que están escritos sin ella.
 function normalizePath(pathname) {
-  const cleaned = pathname.replace(/\/index\.html$/, "/");
+  let cleaned = pathname.replace(/\/index\.html$/, "/");
+  if (cleaned.length > 1) {
+    cleaned = cleaned.replace(/\/+$/, "");
+  }
   return cleaned === "" ? "/" : cleaned;
 }
 
