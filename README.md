@@ -170,7 +170,7 @@ npm test          # corre todos los tests una vez
 npm run test:watch  # los re-corre en cada cambio
 ```
 
-Son 11 tests en total, sobre las funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API, así que no hace falta mockear nada — reciben un dato y siempre devuelven el mismo resultado):
+Son 18 tests en total. La mayoría son sobre funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API — reciben un dato y siempre devuelven el mismo resultado, así que no hace falta mockear nada). Los de `storage.js` sí necesitan un mock, porque esas funciones sí dependen de algo externo (`localStorage`, que en el entorno de test de Node no existe de verdad): se reemplaza por un `localStorage` falso en memoria (`vi.stubGlobal` + `vi.fn()`), para poder probar el comportamiento sin depender de un navegador.
 
 ```bash
   ✓ test/app.test.js (6)
@@ -182,6 +182,15 @@ Son 11 tests en total, sobre las funciones puras del proyecto (las que no depend
      ✓ clasifica un status 429 como rate-limit
      ✓ clasifica cualquier otro status HTTP como error de servidor
      ✓ clasifica un error sin status (fetch que nunca respondió) como error de red
+  ✓ test/storage.test.js (7)
+   ✓ storage.js (persistencia del historial en localStorage) (7)
+     ✓ guarda una conversación y después la lee igual
+     ✓ devuelve null si no hay nada guardado para ese personaje
+     ✓ borra la conversación guardada
+     ✓ hasSavedConversation es false cuando solo está el saludo inicial (1 mensaje)
+     ✓ hasSavedConversation es true si ya se habló más allá del saludo
+     ✓ guarda con la clave con el prefijo correcto (mismo prefijo que usa chat.js)
+     ✓ no rompe si localStorage.getItem tira un error (ej: modo privado)
   ✓ test/utils.test.js (5)
    ✓ escapeHtml (3)
      ✓ escapa los 5 caracteres especiales de HTML
