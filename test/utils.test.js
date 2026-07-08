@@ -1,3 +1,4 @@
+// Tests de las funciones utilitarias puras (escapeHtml, createMessage) que se reutilizan en toda la app.
 import { describe, it, expect } from "vitest";
 import { escapeHtml, createMessage } from "../src/utils.js";
 

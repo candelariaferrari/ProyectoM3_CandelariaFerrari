@@ -1,3 +1,4 @@
+// Tests de las funciones puras que procesan la respuesta de Gemini y clasifican errores: no dependen del DOM ni de una llamada real a la API.
 import { describe, it, expect } from "vitest";
 import { extractText } from "../api/functions.js";
 import { errorInfoFor } from "../src/chat.js";
