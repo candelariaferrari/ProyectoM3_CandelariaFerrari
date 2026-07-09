@@ -46,11 +46,17 @@ export function renderChat(emotionParam) {
     <div id="chatbox" class="${key}">
       <div class="chatbox__body">
         <aside class="chat-sidebar">
+        <span class="chat-sidebar__header">
           <img class="chat-sidebar__avatar" src="/assets/img/${key}.png" alt="${data.name}" />
-          <h2 class="chat-sidebar__name">${data.name}</h2>
-          <p class="chat-sidebar__tagline">${data.desc}</p>
+          <span class="chat-sidebar__title">
+            <h2 class="chat-sidebar__name">${data.name}</h2>
+            <p class="chat-sidebar__tagline">${data.desc}</p>
+          </span>
+        </span>
+        <span class="chat-sidebar__container-list">
           <p class="chat-sidebar__label">Puedo ayudarte con:</p>
           <ul class="chat-sidebar__list">${helps}</ul>
+        </span>
           <p class="chat-sidebar__phrase"> ${data.phrase}</p>
         </aside>
 
