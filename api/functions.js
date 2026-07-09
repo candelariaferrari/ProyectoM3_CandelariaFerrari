@@ -1,6 +1,8 @@
 // Vercel Serverless Function — proxy entre el frontend y la API de Gemini.
+// Usa el SDK oficial (@google/generative-ai) en vez de llamar a fetch a mano.
 
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/interactions";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 const MODEL = "gemini-3.1-flash-lite";
 
 // Un system prompt por personaje
@@ -149,11 +151,21 @@ function getTrimmedHistory(messages) {
   return messages.slice(-MAX_HISTORY_MESSAGES);
 }
 
-/** Recorre la respuesta cruda de la API de Gemini { steps: [ { type: "model_output", content: [ { type: "text", text } ] } ] } */
-export function extractText(data) {
-  const step = (data.steps || []).find((s) => s.type === "model_output");
-  const textBlock = step?.content?.find((c) => c.type === "text");
-  return textBlock?.text?.trim() || "";
+// Convierte el historial interno ({ role: "user" | "assistant", text }) al
+// formato que espera el SDK de Gemini ({ role: "user" | "model", parts: [{ text }] }).
+export function toGeminiContents(messages) {
+  return messages
+    .filter((m) => m?.role === "user" || m?.role === "assistant")
+    .map((m) => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: String(m.text ?? "") }],
+    }));
+}
+
+// Un error de Gemini por límite de cuota puede llegar con status 429 o solo mencionarlo en el mensaje, según la versión del SDK.
+export function isRateLimitError(error) {
+  const text = String(error?.message ?? "");
+  return error?.status === 429 || text.includes("429") || text.toLowerCase().includes("quota");
 }
 
 // Recibe el mensaje del frontend, arma el pedido a Gemini con el system prompt del personaje, y devuelve la respuesta (o el error correspondiente).
@@ -178,55 +190,40 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Falta el historial de la conversación." });
   }
 
-  // historial recortado a los últimos MAX_HISTORY_MESSAGES, convertido de
-  // [{role, text}]
-  const transcript = getTrimmedHistory(messages)
-    .map((m) => `${m.role === "user" ? "Usuario" : "Vos"}: ${m.text}`)
-    .join("\n");
+  // historial recortado a los últimos MAX_HISTORY_MESSAGES, convertido al
+  // formato de "contents" que espera el SDK.
+  const contents = toGeminiContents(getTrimmedHistory(messages));
 
   try {
-    const geminiRes = await fetch(GEMINI_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: MODEL, systemInstruction });
+
+    const result = await model.generateContent({
+      contents,
+      generationConfig: {
+        temperature: 0.9,
+        maxOutputTokens: 200,
       },
-      body: JSON.stringify({
-        model: MODEL,
-        system_instruction: systemInstruction,
-        input: transcript,
-        generation_config: {
-          temperature: 0.9,
-          max_output_tokens: 200,
-          thinking_level: "minimal", //para que responda mas rápido y barato
-        },
-      }),
     });
 
-    const data = await geminiRes.json().catch(() => ({}));
-
-    if (!geminiRes.ok) {
-      console.error("[api/functions] Error de Gemini:", geminiRes.status, data);
-
-      if (geminiRes.status === 429) {
-        return res.status(429).json({
-          error: "Demasiadas consultas por ahora. Esperá unos segundos y probá de nuevo.",
-        });
-      }
-
-      return res.status(geminiRes.status >= 400 && geminiRes.status < 600 ? geminiRes.status : 500).json({
-        error: data?.error?.message || "Gemini no pudo generar una respuesta.",
-      });
-    }
-
-    const text = extractText(data);
+    const text = result.response.text().trim();
     if (!text) {
       return res.status(502).json({ error: "Gemini respondió sin texto." });
     }
 
     return res.status(200).json({ text });
   } catch (error) {
-    console.error("[api/functions] Error de red/inesperado:", error);
-    return res.status(500).json({ error: "No se pudo conectar con Gemini." });
+    console.error("[api/functions] Error de Gemini:", error);
+
+    if (isRateLimitError(error)) {
+      return res.status(429).json({
+        error: "Demasiadas consultas por ahora. Esperá unos segundos y probá de nuevo.",
+      });
+    }
+
+    const status = typeof error?.status === "number" ? error.status : 500;
+    return res.status(status).json({
+      error: error?.message || "Gemini no pudo generar una respuesta.",
+    });
   }
 }

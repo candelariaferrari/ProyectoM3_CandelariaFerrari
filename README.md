@@ -61,7 +61,7 @@ Cada personaje tiene su propio *system prompt* (definido en `api/functions.js`) 
 - **CSS modular:** los estilos están separados por responsabilidad (`base`, `shared` y un archivo por vista). Esto mantiene cada archivo pequeño, facilita encontrar las clases rápidamente y hace más simple el mantenimiento del proyecto.
 - **Routing:** SPA con History API (`pushState` + evento `popstate`), sin recargar la página.
 - **Estado del chat:** historial en memoria (un `Map` por personaje), vive solo durante la sesión — se pierde al recargar, tal como pide la consigna. Se puede reiniciar manualmente con el botón de reset del chat.
-- **IA:** Google Gemini (Interactions API, modelo `gemini-3.1-flash-lite`), consumida vía `fetch` nativo desde una Vercel Serverless Function — la API key nunca se expone al navegador. En cada request se manda el historial completo (recortado a los últimos 20 mensajes) para que el personaje mantenga contexto de la conversación.
+- **IA:** Google Gemini (modelo `gemini-3.1-flash-lite`), consumida vía el SDK oficial (`@google/generative-ai`) desde una Vercel Serverless Function — la API key nunca se expone al navegador. En cada request se manda el historial completo (recortado a los últimos 20 mensajes) para que el personaje mantenga contexto de la conversación.
 - **Tests:** Vitest, sobre las funciones puras (utilitarias, parseo de la respuesta de la API, clasificación de errores).
 - **Deploy:** Vercel, con deploy automático en cada `git push` a `main`.
 
@@ -173,14 +173,18 @@ npm test          # corre todos los tests una vez
 npm run test:watch  # los re-corre en cada cambio
 ```
 
-Son 18 tests en total. La mayoría son sobre funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API — reciben un dato y siempre devuelven el mismo resultado, así que no hace falta mockear nada). Los de `storage.js` sí necesitan un mock, porque esas funciones sí dependen de algo externo (`localStorage`, que en el entorno de test de Node no existe de verdad): se reemplaza por un `localStorage` falso en memoria (`vi.stubGlobal` + `vi.fn()`), para poder probar el comportamiento sin depender de un navegador.
+Son 23 tests en total. La mayoría son sobre funciones puras del proyecto (las que no dependen del DOM ni de una llamada real a la API — reciben un dato y siempre devuelven el mismo resultado, así que no hace falta mockear nada). Los de `storage.js` sí necesitan un mock, porque esas funciones sí dependen de algo externo (`localStorage`, que en el entorno de test de Node no existe de verdad): se reemplaza por un `localStorage` falso en memoria (`vi.stubGlobal` + `vi.fn()`), para poder probar el comportamiento sin depender de un navegador.
 
 ```bash
-  ✓ test/app.test.js (6)
-   ✓ extractText (parseo de la respuesta de Gemini) (3)
-     ✓ extrae el texto de una respuesta válida de Gemini
-     ✓ devuelve "" si la respuesta no trae ningún step de tipo model_output
-     ✓ devuelve "" si "steps" directamente no viene en la respuesta
+  ✓ test/app.test.js (9)
+   ✓ toGeminiContents (mapeo del historial interno al formato del SDK) (3)
+     ✓ convierte role "user" y "assistant" a "user" y "model"
+     ✓ ignora mensajes con un role que no sea user/assistant
+     ✓ devuelve un array vacío si no hay mensajes
+   ✓ isRateLimitError (detección de error de cuota del SDK) (3)
+     ✓ detecta un error con status 429
+     ✓ detecta un error cuyo mensaje menciona "quota"
+     ✓ no marca como rate-limit un error de otro tipo
    ✓ errorInfoFor (mapeo de errores a la tarjeta de error del chat) (3)
      ✓ clasifica un status 429 como rate-limit
      ✓ clasifica cualquier otro status HTTP como error de servidor
@@ -194,14 +198,17 @@ Son 18 tests en total. La mayoría son sobre funciones puras del proyecto (las q
      ✓ hasSavedConversation es true si ya se habló más allá del saludo
      ✓ guarda con la clave con el prefijo correcto (mismo prefijo que usa chat.js)
      ✓ no rompe si localStorage.getItem tira un error (ej: modo privado)
-  ✓ test/utils.test.js (5)
+  ✓ test/utils.test.js (7)
    ✓ escapeHtml (3)
      ✓ escapa los 5 caracteres especiales de HTML
      ✓ no modifica un texto que no tiene caracteres especiales
      ✓ convierte a string cualquier valor que no sea string (ej: number)
    ✓ createMessage (2)
-     ✓ crea un mensaje con la forma { id, role, text }
+     ✓ crea un mensaje con la forma { id, role, text, timestamp }
      ✓ genera un id distinto en cada llamada, incluso con el mismo texto
+   ✓ formatTime (2)
+     ✓ formatea un timestamp como HH:MM
+     ✓ devuelve "" si no se pasa timestamp
 ```
 
 ## Deploy
@@ -261,13 +268,14 @@ Durante el desarrollo utilicé Claude como herramienta de apoyo y pair-programmi
 
 Algunas decisiones concretas que salieron de ese proceso:
 - **Arquitectura y estructura de carpetas:** le compartí la guía del proyecto y un ejemplo del profesor para decidir cómo organizar `src/`, `api/` y los estilos, y entender por qué `index.html` tiene que vivir en la raíz para que Vercel lo sirva bien en producción.
-- **Integración con Gemini:** le pedí que investigara el estado actual de la API de Gemini (cambió de formato de API key y de endpoint —de `generateContent` a la Interactions API— durante 2026), para no basar el código en documentación vieja.
+- **Integración con Gemini:** en la primera versión le pedí que investigara el estado actual de la API de Gemini (cambió de formato de API key y de endpoint —de `generateContent` a la Interactions API— durante 2026), para no basar el código en documentación vieja. Más adelante migramos esa integración al SDK oficial (ver el punto de más abajo).
 - **System prompts de los personajes:** partimos de una versión base y los fui iterando a mano (agregando ejemplos de diálogo, ajustando el tono de cada uno) hasta que las respuestas sonaban realmente como cada personaje.
 - **Debugging de CSS:** un bug de scroll (la página entera scrolleaba en vez de quedar contenido dentro del chat) llevó varias iteraciones — terminó siendo un problema real de Flexbox (`min-height` vs `height` fija, y falta de `overflow: hidden` en el punto justo de la cadena de contenedores).
 - **Tests:** me ayudó a identificar qué funciones eran las más importantes de testear (las puras: `escapeHtml`, `createMessage`, el parseo de la respuesta de la API) y por qué esas y no la lógica que toca el DOM directamente.
 - **Test de `storage.js` con mock:** como `localStorage` no existe en el entorno de test (Vitest corre en Node, no en un navegador), me explicó qué es mockear y me ayudó a armar un `localStorage` falso en memoria con `vi.fn()` y `vi.stubGlobal()`, para poder probar el guardado/lectura/borrado del historial y el manejo de errores (ej: modo privado) sin depender de un browser real.
 - **Decisiones de UX/UI:** en varias mejoras de interfaz (por ejemplo, cómo resolver el navbar en mobile sin agregar un menú hamburguesa innecesario para solo 3 links, o cómo diferenciar visualmente qué personaje está activo) discutí con la IA distintas alternativas y sus tradeoffs antes de elegir una, en vez de pedir directamente una solución armada.
 - **Persistencia con localStorage:** me ayudó a pensar el diseño antes de escribir código (por qué conviene mantener un `Map` en memoria como caché y no leer `localStorage` en cada render, cómo envolver las llamadas a `localStorage` en `try/catch` para que no rompan la app en modo privado o si el storage está lleno/deshabilitado, y por qué mutar el array de la conversación en vez de reemplazarlo al reiniciar el chat).
+- **Migración al SDK oficial de Gemini:** después de la clase consulta inicial donde el proyecto consumía la API con `fetch` nativo, el profesor pidió explícitamente usar el SDK (`@google/generative-ai`) y no tenía muy claro por dónde arrancar ese cambio. Le pedí que me explicara primero qué diferencias había entre lo que ya tenía armado y el SDK (dejar de construir el `fetch` a mano, usar `GoogleGenerativeAI`/`getGenerativeModel`/`generateContent`, y que la respuesta y los errores llegan de otra forma que una llamada REST cruda), y a partir de esa explicación lo fuimos armando juntos: la función que convierte el historial interno al formato `contents` que pide el SDK, y cómo adaptar la detección de rate-limit (429) a la forma en que el SDK reporta errores. También actualizamos los tests que dependían de la forma vieja de la respuesta. Me sirvió para entender las dos formas de integrar una API externa (a mano con `fetch` vs. con el SDK del proveedor) y cuándo tiene sentido usar cada una.
 
 
 ---
