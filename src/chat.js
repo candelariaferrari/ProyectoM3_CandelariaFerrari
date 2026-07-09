@@ -2,7 +2,7 @@
 // serverless function de Gemini, estado de "escribiendo...", errores y
 // scroll automático.
 
-import { escapeHtml, createMessage } from "./utils.js";
+import { escapeHtml, createMessage, formatTime } from "./utils.js";
 import { loadConversation, saveConversation, clearConversation } from "./storage.js";
 
 // Historial en memoria por personaje (caché de lo que hay en localStorage)
@@ -39,7 +39,10 @@ function messageBubbleHtml(message) {
     message.role === "user"
       ? ""
       : `<button type="button" class="btn-copy" aria-label="Copiar respuesta">${ICON_COPY}</button>`;
-  return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)}</p>${copyButton}</div>`;
+  const time = message.timestamp
+    ? `<span class="message__time">${formatTime(message.timestamp)}</span>`
+    : "";
+  return `<div class="message ${roleClass}"><p>${escapeHtml(message.text)} ${time}</p>${copyButton}</div>`;
 }
 
 // Copia el texto de una burbuja al portapapeles.

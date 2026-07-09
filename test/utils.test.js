@@ -1,6 +1,6 @@
 // Tests de las funciones utilitarias puras (escapeHtml, createMessage) que se reutilizan en toda la app.
 import { describe, it, expect } from "vitest";
-import { escapeHtml, createMessage } from "../src/utils.js";
+import { escapeHtml, createMessage, formatTime } from "../src/utils.js";
 
 describe("escapeHtml", () => {
   it("escapa los 5 caracteres especiales de HTML", () => {
@@ -24,12 +24,13 @@ describe("escapeHtml", () => {
 });
 
 describe("createMessage", () => {
-  it("crea un mensaje con la forma { id, role, text }", () => {
+  it("crea un mensaje con la forma { id, role, text, timestamp }", () => {
     const message = createMessage("user", "hola");
 
     expect(message).toHaveProperty("id");
     expect(message.role).toBe("user");
     expect(message.text).toBe("hola");
+    expect(message).toHaveProperty("timestamp");
   });
 
   it("genera un id distinto en cada llamada, incluso con el mismo texto", () => {
@@ -37,5 +38,17 @@ describe("createMessage", () => {
     const b = createMessage("assistant", "hola");
 
     expect(a.id).not.toBe(b.id);
+  });
+});
+
+describe("formatTime", () => {
+  it("formatea un timestamp como HH:MM", () => {
+    const timestamp = new Date("2026-07-09T14:05:00").getTime();
+
+    expect(formatTime(timestamp)).toMatch(/^\d{2}:\d{2}$/);
+  });
+
+  it('devuelve "" si no se pasa timestamp', () => {
+    expect(formatTime(undefined)).toBe("");
   });
 });

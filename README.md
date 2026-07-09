@@ -233,6 +233,7 @@ Para deployarlo desde cero en tu propia cuenta:
 - Persistencia con localStorage
 - Copiar respuesta a portapapeles
 - Modo claro/oscuro
+- Hora de cada mensaje (timestamp)
 
 ## 🎬 Demo
 

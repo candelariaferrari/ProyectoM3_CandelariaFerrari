@@ -278,6 +278,13 @@
   padding-right: 2.1rem;
 }
 
+.message__time {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
 .btn-copy {
   position: absolute;
   right: 6px;
