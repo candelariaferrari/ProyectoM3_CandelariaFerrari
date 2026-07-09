@@ -25,7 +25,7 @@ describe("storage.js (persistencia del historial en localStorage)", () => {
   });
 
   it("guarda una conversación y después la lee igual", () => {
-    const conversation = [{ id: "1", role: "char", text: "Hola" }];
+    const conversation = [{ id: "1", role: "assistant", text: "Hola" }];
     saveConversation("joy", conversation);
 
     expect(loadConversation("joy")).toEqual(conversation);
@@ -36,21 +36,21 @@ describe("storage.js (persistencia del historial en localStorage)", () => {
   });
 
   it("borra la conversación guardada", () => {
-    saveConversation("sadness", [{ id: "1", role: "char", text: "Hola" }]);
+    saveConversation("sadness", [{ id: "1", role: "assistant", text: "Hola" }]);
     clearConversation("sadness");
 
     expect(loadConversation("sadness")).toBeNull();
   });
 
   it('hasSavedConversation es false cuando solo está el saludo inicial (1 mensaje)', () => {
-    saveConversation("anxiety", [{ id: "1", role: "char", text: "saludo" }]);
+    saveConversation("anxiety", [{ id: "1", role: "assistant", text: "saludo" }]);
 
     expect(hasSavedConversation("anxiety")).toBe(false);
   });
 
   it("hasSavedConversation es true si ya se habló más allá del saludo", () => {
     saveConversation("anxiety", [
-      { id: "1", role: "char", text: "saludo" },
+      { id: "1", role: "assistant", text: "saludo" },
       { id: "2", role: "user", text: "hola" },
     ]);
 

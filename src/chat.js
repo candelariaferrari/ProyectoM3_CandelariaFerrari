@@ -14,7 +14,7 @@ const conversations = new Map();
 function getConversation(key, greeting) {
   if (!conversations.has(key)) {
     const saved = loadConversation(key);
-    conversations.set(key, saved && saved.length > 0 ? saved : [createMessage("char", greeting)]);
+    conversations.set(key, saved && saved.length > 0 ? saved : [createMessage("assistant", greeting)]);
   }
   return conversations.get(key);
 }
@@ -23,7 +23,7 @@ function getConversation(key, greeting) {
 function resetHistory(key, greeting) {
   const conversation = getConversation(key, greeting);
   conversation.length = 0;
-  conversation.push(createMessage("char", greeting));
+  conversation.push(createMessage("assistant", greeting));
   clearConversation(key);
   return conversation;
 }
@@ -33,7 +33,7 @@ const ICON_COPY = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" s
 const ICON_CHECK = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function messageBubbleHtml(message) {
-  const roleClass = message.role === "user" ? "message--user" : "message--char";
+  const roleClass = message.role === "user" ? "message--user" : "message--assistant";
   // El botón de copiar solo tiene sentido en las respuestas del personaje.
   const copyButton =
     message.role === "user"
@@ -63,7 +63,7 @@ async function copyMessageText(button) {
 
 function typingBubbleHtml() {
   return `
-    <div class="message message--char message--typing">
+    <div class="message message--assistant message--typing">
       <span></span><span></span><span></span>
     </div>
   `;
@@ -169,7 +169,7 @@ async function sendAndRender(key, conversation, messagesContainer, input, sendBu
 
   try {
     const reply = await requestReply(key, conversation);
-    conversation.push(createMessage("char", reply));
+    conversation.push(createMessage("assistant", reply));
     saveConversation(key, conversation);
     renderMessages(messagesContainer, conversation, {});
   } catch (error) {

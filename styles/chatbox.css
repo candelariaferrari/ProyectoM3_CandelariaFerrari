@@ -269,7 +269,7 @@
   animation: message-in 0.3s var(--ease);
 }
 
-.message--char {
+.message--assistant {
   position: relative;
   align-self: flex-start;
   background: var(--bubble-char-bg);

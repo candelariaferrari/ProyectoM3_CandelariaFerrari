@@ -33,8 +33,8 @@ describe("createMessage", () => {
   });
 
   it("genera un id distinto en cada llamada, incluso con el mismo texto", () => {
-    const a = createMessage("char", "hola");
-    const b = createMessage("char", "hola");
+    const a = createMessage("assistant", "hola");
+    const b = createMessage("assistant", "hola");
 
     expect(a.id).not.toBe(b.id);
   });

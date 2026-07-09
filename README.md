@@ -129,7 +129,7 @@ El frontend nunca habla con Gemini directamente: le habla a nuestra propia Serve
   "character": "joy",
   "messages": [
     { "id": "...", "role": "user", "text": "Hola, ¿cómo estás?" },
-    { "id": "...", "role": "char", "text": "¡Hola! ✨ Me alegra muchísimo verte." },
+    { "id": "...", "role": "assistant", "text": "¡Hola! ✨ Me alegra muchísimo verte." },
     { "id": "...", "role": "user", "text": "Me llamo Cande" }
   ]
 }
