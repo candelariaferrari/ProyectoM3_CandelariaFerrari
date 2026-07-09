@@ -465,7 +465,13 @@
     flex-shrink: 0;
     border-radius: 26px;
     background: linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
-    overflow: hidden;
+    /* overflow-y: auto en vez de "hidden" a secas: si el contenido (avatar +
+       nombre + tagline + lista + frase) es más alto que el espacio
+       disponible en pantallas más chicas o con menos altura, hace scroll
+       en vez de cortarse. overflow-x sigue en hidden para no perder el
+       recorte de las esquinas redondeadas. */
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .chat-header {
